@@ -10,17 +10,13 @@ public class D3ExDatabase {
 
 	private static final String DRIVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
 
-	/** der Benutzername für D3P auf SRVMSSQL03 */
-	private static final String USERNAME = "burtool";
-
-	/** das Kennwort für D3P auf SRVMSSQL03 */
-	private static final char[] PASSWORD = new char[] { 'L', 't', 'T', 'D', 'h', 'e', 'A', 'Q', 'Y', 'K', 'V', 'K', 'o',
-			'g', '3', 'x', 'n', 'E', 'B', 'm' };
+	/** die lokale Benutzerkonfiguration */
+	private static final D3ExConfig CONFIG = D3ExConfig.getDefault();
 
 	// @formatter:off
 	private static final String URL = "jdbc:sqlserver://172.16.1.9;database=D3P;"
-			+ "username=burtool;"
-			+ "password=" + String.valueOf(PASSWORD);
+			+ "username=" + CONFIG.getProperty(D3ExConfig.DATABASE_USERNAME) + ";"
+			+ "password=" + CONFIG.getProperty(D3ExConfig.DATABASE_PASSWORD);
 	// @formatter:on
 
 	private D3ExDatabase() {

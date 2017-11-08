@@ -6,9 +6,9 @@ public class D3ExException extends Exception {
 		super(msg, ex);
 	}
 
-	public static class DatabaseException extends D3ExException {
+	public static class ConfigException extends D3ExException {
 
-		public DatabaseException(String msg, Throwable ex) {
+		public ConfigException(String msg, Throwable ex) {
 			super(msg, ex);
 		}
 
@@ -17,6 +17,14 @@ public class D3ExException extends Exception {
 	public static class ResourceException extends D3ExException {
 
 		public ResourceException(String msg, Throwable ex) {
+			super(msg, ex);
+		}
+
+	}
+
+	public static class DatabaseException extends D3ExException {
+
+		public DatabaseException(String msg, Throwable ex) {
 			super(msg, ex);
 		}
 
