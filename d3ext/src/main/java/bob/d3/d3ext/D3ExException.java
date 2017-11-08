@@ -30,4 +30,13 @@ public class D3ExException extends Exception {
 
 	}
 
+	public static class SourceException extends D3ExException {
+
+		public SourceException(String msg, Throwable ex) {
+			super(msg, ex);
+		}
+
+	}
+
 }
+

@@ -12,6 +12,7 @@ public class D3ExTool {
 
 	public static void main(String[] args) throws D3ExException {
 		log("Program starts...");
+		D3ExSourceFolder src = D3ExSourceFolder.create();
 		D3ExDocFactory fac = null;
 		try {
 			fac = D3ExDocFactory.create();
@@ -20,6 +21,7 @@ public class D3ExTool {
 				D3ExDoc doc = fac.getDoc();
 				if (null != doc) {
 					System.out.println(doc);
+					src.lookFor(doc.getId());
 				}
 			} while (fac.next());
 		} finally {
