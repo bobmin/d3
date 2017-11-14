@@ -28,6 +28,8 @@ public class D3ExConfig {
 
 	public static final String DATABASE_PASSWORD = "D3ExConfig.database_password";
 
+	public static final String DEVELOPMENT_PROPERTY = "d3ext.development";
+
 	static {
 		final String path = System.getProperty("user.home");
 		CONFIG_FILE = new File(path, "d3ext.properties");
@@ -173,6 +175,11 @@ public class D3ExConfig {
 				throw new D3ExException.ConfigException("cannot write " + CONFIG_FILE.getAbsolutePath(), ex);
 			}
 		}
+	}
+
+	public boolean isDevelomentActiv() {
+		String prop = System.getProperty(DEVELOPMENT_PROPERTY, "false");
+		return Boolean.valueOf(prop).booleanValue();
 	}
 
 }

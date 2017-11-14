@@ -16,4 +16,13 @@ public class D3ExConfigTest {
 		System.out.println("cfg: database password = " + pwd.replaceAll(".", "\\*"));
 	}
 
+	@Test
+	public void testIsDevelopmentActiv() {
+		System.setProperty(D3ExConfig.DEVELOPMENT_PROPERTY, "true");
+		D3ExConfig cfg = D3ExConfig.getDefault();
+		boolean x = cfg.isDevelomentActiv();
+		System.out.println("development: " + x);
+		Assert.assertTrue(x);
+	}
+
 }

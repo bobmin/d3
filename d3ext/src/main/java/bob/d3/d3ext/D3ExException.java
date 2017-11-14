@@ -38,5 +38,13 @@ public class D3ExException extends Exception {
 
 	}
 
+	public static class ExportException extends D3ExException {
+
+		public ExportException(String msg, Throwable ex) {
+			super(msg, ex);
+		}
+
+	}
+
 }
 

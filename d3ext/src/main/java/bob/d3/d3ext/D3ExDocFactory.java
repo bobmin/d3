@@ -1,14 +1,18 @@
 package bob.d3.d3ext;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 import bob.d3.d3ext.D3ExException.DatabaseException;
 import bob.d3.d3ext.D3ExException.ResourceException;
@@ -29,6 +33,8 @@ public class D3ExDocFactory {
 
 	private ResultSet loopRs = null;
 
+	private D3ExDocFields fields = null;
+
 	private D3ExDocFactory(final String sql) {
 		this.loopSql = sql;
 	}
@@ -41,6 +47,7 @@ public class D3ExDocFactory {
 
 	public boolean open() throws DatabaseException {
 		try {
+			fields = D3ExDocFields.getDefault();
 			conn = D3ExDatabase.createConnection();
 			loopStmt = conn.createStatement();
 			loopRs = loopStmt.executeQuery(loopSql);
@@ -168,17 +175,47 @@ public class D3ExDocFactory {
 
 		private final int doku_nr;
 
-		public D3ExDoc(String id, String art, long size, String dir, String erw, int nr) {
+		private final String folder;
+
+		/** die Datei im Filesystem */
+		private File file = null;
+
+		private D3ExDoc(String id, String art, long size, String dir, String erw, int nr) throws DatabaseException {
 			this.doku_id = id;
 			this.dokuart = art;
 			this.size_in_byte = size;
 			this.logi_verzeichnis = dir;
 			this.datei_erw = erw;
 			this.doku_nr = nr;
+			this.folder = computeFolder(id);
+		}
+
+		private String computeFolder(String id) throws DatabaseException {
+			String x;
+			if (8 == id.length()) {
+				x = id.substring(0, 4);
+			} else if (10 == id.length()) {
+				x = id.substring(0, 6);
+			} else {
+				throw new D3ExException.DatabaseException("format from [id] is unknown: " + id, null);
+			}
+			return x;
 		}
 
 		public String getId() {
 			return doku_id;
+		}
+
+		public String getFolder() {
+			return folder;
+		}
+
+		public String getErw() {
+			return datei_erw;
+		}
+
+		public String getArt() {
+			return dokuart;
 		}
 
 		private void put(final String columnName, final String value) {
@@ -188,17 +225,43 @@ public class D3ExDocFactory {
 			props.put(columnName, value);
 		}
 
+		public Set<String> getPropKeys() {
+			return (null == props ? Collections.emptySet() : props.keySet());
+		}
+
+		public String getPropValue(String key) {
+			Objects.requireNonNull(key);
+			String x = null;
+			if (null != props && props.containsKey(key)) {
+				x = props.get(key);
+			}
+			return x;
+		}
+
+		public void setFile(File f) {
+			this.file = f;
+		}
+
+		public boolean hasAttachment() {
+			return (null != file);
+		}
+
+		public File getFile() {
+			return file;
+		}
+
 		@Override
 		public String toString() {
 			int propsSize = (null == props ? 0 : props.size());
 			// @formatter:off
 			return String.format("D3ExDoc [doku_id=%s, art=%s"
 					+ ", props=%d, nr=%d, bytes=%d, "
-					+ "dir=%s, erw=%s]"
+					+ "dir=%s, erw=%s, path=%s]"
 					, doku_id, dokuart
 					, propsSize
 					, doku_nr, size_in_byte
-					, logi_verzeichnis, datei_erw);
+					, logi_verzeichnis, datei_erw
+					, (null == file ? "null" : file.getAbsolutePath()));
 			// @formatter:on
 		}
 
