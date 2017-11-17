@@ -101,6 +101,7 @@ public class D3ExWriter {
 	}
 
 	private String formatDokuart(String dokuart) {
+		Objects.requireNonNull(dokuart);
 		String x = arts.lookFor(dokuart);
 		return (null == x ? dokuart : String.format("%s [%s]", x, dokuart));
 	}
@@ -108,7 +109,11 @@ public class D3ExWriter {
 	private void writeLine(final BufferedWriter writer, final String key, final String value) throws IOException {
 		writer.write(key);
 		writer.write(": ");
-		writer.write(value);
+		if (null == value || 0 == value.trim().length()) {
+			writer.write("(ohne Wert)");
+		} else {
+			writer.write(value.trim());
+		}
 		writer.newLine();
 	}
 

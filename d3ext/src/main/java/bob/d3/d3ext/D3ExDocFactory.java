@@ -73,7 +73,7 @@ public class D3ExDocFactory {
 				columnCount++;
 			}
 			if (columnNames.contains("dokuart")) {
-				art = loopRs.getString("dokuart");
+				art = loopRs.getString("dokuart").trim();
 				columnCount++;
 			}
 			if (columnNames.contains("size_in_byte")) {

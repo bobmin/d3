@@ -13,4 +13,11 @@ public class D3ExDocArtsTest {
 		Assert.assertNotNull(x);
 	}
 
+	@Test
+	public void testLookFor() throws DatabaseException {
+		D3ExDocArts x = D3ExDocArts.getDefault();
+		Assert.assertEquals("Auftragsakte", x.lookFor("AUAK"));
+		Assert.assertEquals("Empfangsschein", x.lookFor("EMSC"));
+	}
+
 }
