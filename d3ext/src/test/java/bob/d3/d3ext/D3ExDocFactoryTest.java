@@ -16,7 +16,7 @@ public class D3ExDocFactoryTest {
 	public void testOpenGetDocNext() throws ResourceException, DatabaseException {
 		D3ExDocFactory fac = null;
 		try {
-			fac = D3ExDocFactory.create();
+			fac = D3ExDocFactory.create("/query_docs_demo.sql");
 			Assert.assertTrue(fac.open());
 			do {
 				D3ExDoc doc = fac.getDoc();

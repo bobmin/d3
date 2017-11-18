@@ -45,7 +45,7 @@ public class D3ExTool {
 
 			D3ExDocFactory fac = null;
 			try {
-				fac = D3ExDocFactory.create();
+				fac = D3ExDocFactory.create("/query_docs_all.sql");
 				if (fac.open()) {
 					int count = 0;
 					do {

@@ -57,7 +57,7 @@ public class D3ExWriter {
 			for (D3ExProp p : doc.getProps()) {
 				String key;
 				if (p.hasLongtext()) {
-					key = String.format("", p.getLongtext(), p.getColumnName());
+					key = String.format("%s [%s]", p.getLongtext(), p.getColumnName());
 				} else {
 					key = p.getColumnName();
 				}

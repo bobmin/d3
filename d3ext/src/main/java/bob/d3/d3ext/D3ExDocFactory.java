@@ -45,12 +45,14 @@ public class D3ExDocFactory {
 	/**
 	 * Liefert die Quelle zu den Dokumenten.
 	 * 
+	 * @param queryResourcePath
+	 *            der Pfad zur SQL-Ressource (-Abfrage)
 	 * @return ein Objekt, niemals <code>null</code>
 	 * @throws ResourceException
 	 *             wenn Abfrage nicht gelesen werden kann
 	 */
-	public static D3ExDocFactory create() throws ResourceException {
-		D3ExResource res = new D3ExResource("/query_docs_all.sql");
+	public static D3ExDocFactory create(final String queryResourcePath) throws ResourceException {
+		D3ExResource res = new D3ExResource(queryResourcePath);
 		D3ExDocFactory db = new D3ExDocFactory(res.getText());
 		return db;
 	}
