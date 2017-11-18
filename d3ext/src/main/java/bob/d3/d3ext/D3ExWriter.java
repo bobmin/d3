@@ -12,33 +12,28 @@ import java.util.Objects;
 import java.util.logging.Logger;
 
 import bob.d3.d3ext.D3ExDocFactory.D3ExDoc;
+import bob.d3.d3ext.D3ExDocFactory.D3ExProp;
 import bob.d3.d3ext.D3ExException.ConfigException;
-import bob.d3.d3ext.D3ExException.DatabaseException;
-import bob.d3.d3ext.D3ExException.ExportException;
+import bob.d3.d3ext.D3ExException.WriterException;
 
 public class D3ExWriter {
 
 	/** der Logger */
-	private static final Logger LOG = Logger.getLogger(D3ExTool.class.getName());
+	private static final Logger LOG = Logger.getLogger(D3ExWriter.class.getName());
 
-	private D3ExDocArts arts = null;
-
-	private D3ExDocFields fields = null;
-
+	/** das Wurzelverzeichnis */
 	private final File root;
 
-	public D3ExWriter(final String path) throws ConfigException, DatabaseException {
+	public D3ExWriter(final String path) throws ConfigException {
 		Objects.requireNonNull(path);
 		this.root = new File(path);
 		if (!root.exists()) {
 			throw new D3ExException.ConfigException("[path] is not writable: " + path, null);
 		}
 		LOG.info("path assigned: " + path);
-		arts = D3ExDocArts.getDefault();
-		fields = D3ExDocFields.getDefault();
 	}
 
-	public void export(final D3ExDoc doc) throws ExportException {
+	public void pull(final D3ExDoc doc) throws WriterException {
 		File f = new File(root, doc.getFolder());
 		f.mkdirs();
 		writeTextfile(f, doc);
@@ -48,7 +43,7 @@ public class D3ExWriter {
 		LOG.info("document exported: " + doc.getId());
 	}
 
-	private void writeTextfile(final File folder, final D3ExDoc doc) throws ExportException {
+	private void writeTextfile(final File folder, final D3ExDoc doc) throws WriterException {
 		final String id = doc.getId();
 		File file = new File(folder, id + ".txt");
 		BufferedWriter writer = null;
@@ -56,12 +51,26 @@ public class D3ExWriter {
 			writer = new BufferedWriter(new FileWriter(file));
 			writeLine(writer, "ID", doc.getId());
 			String dokuart = doc.getArt();
-			writeLine(writer, "DOKUMENTENART", formatDokuart(dokuart));
-			for (String key : doc.getPropKeys()) {
-				String keyFormatted = formatKey(dokuart, key);
-				writeLine(writer, keyFormatted, doc.getPropValue(key));
+			writeLine(writer, "DOKUMENTENART", formatDokuart(dokuart, doc.getArtLong()));
+			writeLine(writer, "DOKUMENTNUMMER", String.valueOf(doc.getDokuNr()));
+
+			for (D3ExProp p : doc.getProps()) {
+				String key;
+				if (p.hasLongtext()) {
+					key = String.format("", p.getLongtext(), p.getColumnName());
+				} else {
+					key = p.getColumnName();
+				}
+				writeLine(writer, key, p.getValue());
 			}
+
 			writeLine(writer, "ERWEITERUNG", doc.getErw());
+			long size = doc.getSize();
+			if (0 < size) {
+				writeLine(writer, "BYTES", String.valueOf(size));
+			} else {
+				writeLine(writer, "BYTES", "unbekannt");
+			}
 			if (doc.hasAttachment()) {
 				File f = doc.getFile();
 				writeLine(writer, "DATEIPFAD", f.getAbsolutePath());
@@ -70,7 +79,7 @@ public class D3ExWriter {
 			}
 			
 		} catch (IOException ex) {
-			throw new D3ExException.ExportException("cannot write textfile for " + id, ex);
+			throw new D3ExException.WriterException("cannot write textfile for " + id, ex);
 
 		} finally {
 			try {
@@ -82,42 +91,23 @@ public class D3ExWriter {
 		}
 	}
 
-	private String formatKey(String dokuart, String name) {
-		Objects.requireNonNull(name);
-		String x;
-		if (name.matches("dok_dat_feld_[\\d]+")) {
-			int startIndex = name.lastIndexOf("_");
-			String nr = name.substring(startIndex + 1);
-			String label = fields.lookFor(dokuart, Integer.parseInt(nr));
-			if (null != label) {
-				x = String.format("%s [%s]", label, name);
-			} else {
-				x = name;
-			}
-		} else {
-			x = name;
-		}
-		return x;
-	}
-
-	private String formatDokuart(String dokuart) {
-		Objects.requireNonNull(dokuart);
-		String x = arts.lookFor(dokuart);
-		return (null == x ? dokuart : String.format("%s [%s]", x, dokuart));
+	private String formatDokuart(String artShort, String artLong) {
+		Objects.requireNonNull(artShort);
+		return (null == artLong ? artShort : String.format("%s [%s]", artLong, artShort));
 	}
 
 	private void writeLine(final BufferedWriter writer, final String key, final String value) throws IOException {
 		writer.write(key);
 		writer.write(": ");
-		if (null == value || 0 == value.trim().length()) {
-			writer.write("(ohne Wert)");
-		} else {
+		if (null != value && 0 < value.trim().length()) {
 			writer.write(value.trim());
+		} else {
+			writer.write("(ohne Wert)");
 		}
 		writer.newLine();
 	}
 
-	private void copyAttachment(final File folder, final D3ExDoc doc) throws ExportException {
+	private void copyAttachment(final File folder, final D3ExDoc doc) throws WriterException {
 		String id = doc.getId();
 		InputStream in = null;
 		OutputStream out = null;
@@ -131,7 +121,7 @@ public class D3ExWriter {
 				out.write(buf, 0, len);
 			}
 		} catch (IOException ex) {
-			throw new D3ExException.ExportException("cannot copy attachment for " + id, ex);
+			throw new D3ExException.WriterException("cannot copy attachment for " + id, ex);
 		} finally {
 			if (null != out) {
 				try {

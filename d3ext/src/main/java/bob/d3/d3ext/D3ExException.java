@@ -30,6 +30,14 @@ public class D3ExException extends Exception {
 
 	}
 
+	public static class LocalDatabaseException extends D3ExException {
+
+		public LocalDatabaseException(String msg, Throwable ex) {
+			super(msg, ex);
+		}
+
+	}
+
 	public static class SourceException extends D3ExException {
 
 		public SourceException(String msg, Throwable ex) {
@@ -38,9 +46,9 @@ public class D3ExException extends Exception {
 
 	}
 
-	public static class ExportException extends D3ExException {
+	public static class WriterException extends D3ExException {
 
-		public ExportException(String msg, Throwable ex) {
+		public WriterException(String msg, Throwable ex) {
 			super(msg, ex);
 		}
 
