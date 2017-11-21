@@ -34,14 +34,15 @@ public class D3ExTool {
 	 */
 	public static void main(String[] args) throws D3ExException {
 		if (0 < args.length) {
-			log("Program starts...");
+			final String exportPath = args[0];
+			final boolean onlyDatabase = (1 < args.length ? "--onlyDatabase".equals(args[1]) : false);
 
-			String exportPath = args[0];
+			log("Program starts...\n\texport path = " + exportPath + "\n\tonly database = " + onlyDatabase);
 
-			D3ExWriter writer = new D3ExWriter(exportPath);
-			D3ExMemory memory = D3ExMemory.getPath(exportPath);
+			final D3ExMemory memory = D3ExMemory.getPath(exportPath);
 
-			D3ExSourceFolder src = D3ExSourceFolder.create();
+			D3ExWriter writer = (onlyDatabase ? null : new D3ExWriter(exportPath));
+			D3ExSourceFolder src = (onlyDatabase ? null : D3ExSourceFolder.create());
 
 			D3ExDocFactory fac = null;
 			try {
@@ -51,11 +52,13 @@ public class D3ExTool {
 					do {
 						D3ExDoc doc = fac.getDoc();
 						if (null != doc) {
-							// Datei suchen
-							final File f = src.lookFor(doc.getId(), doc.getFolder(), doc.getErw());
-							doc.setFile(f);
-							// Textdatei schreiben
-							writer.pull(doc);
+							if (null != writer) {
+								// Datei suchen
+								final File f = src.lookFor(doc.getId(), doc.getFolder(), doc.getErw());
+								doc.setFile(f);
+								// Textdatei schreiben
+								writer.pull(doc);
+							}
 							memory.pull(doc);
 						}
 						log(String.format("[%d] document %s pulled", ++count, doc.getId()));
@@ -65,6 +68,7 @@ public class D3ExTool {
 				if (null != fac) {
 					fac.close();
 				}
+				memory.close();
 			}
 			log("Program finished. Bye!");
 		} else {

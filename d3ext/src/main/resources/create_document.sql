@@ -4,6 +4,6 @@ CREATE TABLE document (
     doc_nummer		INT,
 	doc_folder		VARCHAR(10),
 	doc_name		VARCHAR(50),
-	doc_ext			VARCHAR(3),
+	doc_ext			VARCHAR(10),
 	doc_bytes		BIGINT
 );

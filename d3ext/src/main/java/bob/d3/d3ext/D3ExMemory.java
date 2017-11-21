@@ -7,14 +7,14 @@ import java.sql.SQLException;
 import bob.d3.d3ext.D3ExDocFactory.D3ExDoc;
 import bob.d3.d3ext.D3ExDocFactory.D3ExProp;
 import bob.d3.d3ext.D3ExException.LocalDatabaseException;
-import bob.h2db.Database;
-import bob.h2db.Database.ModifyCmd;
+import bob.h2db.DatabaseManager;
+import bob.h2db.DatabaseManager.ModifyCmd;
 
 public class D3ExMemory {
 
-	private final Database db;
+	private final DatabaseManager db;
 
-	private D3ExMemory(Database db) {
+	private D3ExMemory(DatabaseManager db) {
 		this.db = db;
 	}
 
@@ -28,7 +28,7 @@ public class D3ExMemory {
 		// Tables
 		String[] tables = new String[] { "document", "property" };
 		try {
-			Database db = new Database(user, pass, path, "d3exdb", tables);
+			DatabaseManager db = new DatabaseManager(user, pass, path, "d3exdb", tables);
 			D3ExMemory loc = new D3ExMemory(db);
 			return loc;
 		} catch (ClassNotFoundException | SQLException ex) {
@@ -141,6 +141,10 @@ public class D3ExMemory {
 		for (D3ExProp p : doc.getProps()) {
 			saveProp(id, p.getColumnName(), p.getLongtext(), p.getValue());
 		}
+	}
+
+	public void close() {
+		db.close();
 	}
 
 }
