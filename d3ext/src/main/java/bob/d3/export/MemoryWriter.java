@@ -1,4 +1,4 @@
-package bob.d3.d3ext;
+package bob.d3.export;
 
 import java.io.File;
 import java.sql.PreparedStatement;

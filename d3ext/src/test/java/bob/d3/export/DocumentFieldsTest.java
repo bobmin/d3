@@ -1,9 +1,10 @@
-package bob.d3.d3ext;
+package bob.d3.export;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 import bob.d3.D3ExException.DatabaseException;
+import bob.d3.export.DocumentFields;
 
 public class DocumentFieldsTest {
 

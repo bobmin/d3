@@ -1,4 +1,4 @@
-package bob.d3.d3ext;
+package bob.d3.export;
 
 import java.io.File;
 import java.sql.SQLException;
@@ -7,6 +7,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import bob.d3.D3ExException.LocalDatabaseException;
+import bob.d3.export.MemoryWriter;
 
 public class MemoryWriterTest {
 

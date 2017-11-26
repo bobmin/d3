@@ -1,4 +1,4 @@
-package bob.d3.d3ext;
+package bob.d3.export;
 
 import java.util.List;
 
@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import bob.d3.D3ExException.DatabaseException;
 import bob.d3.D3ExException.ResourceException;
+import bob.d3.export.D3Reader;
 import bob.d3.Document;
 import bob.d3.Property;
 

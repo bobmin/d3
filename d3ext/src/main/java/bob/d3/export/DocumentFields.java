@@ -1,4 +1,4 @@
-package bob.d3.d3ext;
+package bob.d3.export;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
