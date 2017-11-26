@@ -1,20 +1,22 @@
-package bob.d3.d3ext;
+package bob.d3;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import bob.d3.d3ext.D3ExException.ResourceException;
+import bob.d3.D3ExException;
+import bob.d3.ResourceFile;
+import bob.d3.D3ExException.ResourceException;
 
-public class D3ExResourceTest {
+public class ResourceFileTest {
 
 	@Test(expected = D3ExException.ResourceException.class)
 	public void testPathNull() throws ResourceException {
-		new D3ExResource(null);
+		new ResourceFile(null);
 	}
 
 	@Test
 	public void testGetText() throws ResourceException {
-		D3ExResource res = new D3ExResource("/d3exresource_demo.txt");
+		ResourceFile res = new ResourceFile("/d3exresource_demo.txt");
 		String txt = res.getText();
 		System.out.println(txt);
 		Assert.assertNotNull(txt);

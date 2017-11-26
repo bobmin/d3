@@ -1,4 +1,4 @@
-package bob.d3.d3ext;
+package bob.d3;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -8,7 +8,7 @@ import java.io.InputStream;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-import bob.d3.d3ext.D3ExException.ConfigException;
+import bob.d3.D3ExException.ConfigException;
 
 /**
  * Die lokale Benutzerkonfiguration zum Programm.
@@ -16,10 +16,10 @@ import bob.d3.d3ext.D3ExException.ConfigException;
  * @author m.boettcher@btmx.net
  *
  */
-public class D3ExConfig {
+public class D3Config {
 
 	/** der Logger */
-	private static final Logger LOG = Logger.getLogger(D3ExConfig.class.getName());
+	private static final Logger LOG = Logger.getLogger(D3Config.class.getName());
 
 	/** die Konfigurationsdatei */
 	private static final File CONFIG_FILE;
@@ -36,7 +36,7 @@ public class D3ExConfig {
 	}
 
 	/** die Singleton-Instanz */
-	private static D3ExConfig _self = new D3ExConfig();
+	private static D3Config _self = new D3Config();
 
 	/** die Konfiguration aus Schlüssel/Wert-Paaren */
 	private Properties applicationProps;
@@ -44,7 +44,7 @@ public class D3ExConfig {
 	/**
 	 * Geschützter Konstrukter ({@link #getDefault()} verwenden).
 	 */
-	private D3ExConfig() {
+	private D3Config() {
 	}
 
 	/**
@@ -52,7 +52,7 @@ public class D3ExConfig {
 	 * 
 	 * @return ein Objekt, niemals <code>null</code>
 	 */
-	public static D3ExConfig getDefault() {
+	public static D3Config getDefault() {
 		return _self;
 	}
 

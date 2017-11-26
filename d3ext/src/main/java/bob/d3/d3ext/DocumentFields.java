@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import bob.d3.d3ext.D3ExException.DatabaseException;
+import bob.d3.D3ExException.DatabaseException;
 
 /**
  * Felder zu Repository:
@@ -22,7 +22,7 @@ import bob.d3.d3ext.D3ExException.DatabaseException;
  * @author maik@btmx.net
  *
  */
-public class D3ExDocFields extends D3ExDataTable {
+public class DocumentFields extends AbstractDataTable {
 
 	// @formatter:off
 	private static final String SQL = "SELECT "
@@ -33,17 +33,17 @@ public class D3ExDocFields extends D3ExDataTable {
 			+ "ORDER BY kue_dokuart, dok_dat_titel";
 	// @formatter:on
 
-	private static D3ExDocFields _self = null;
+	private static DocumentFields _self = null;
 
 	private static Map<String, List<DocField>> data = null;
 
-	private D3ExDocFields() throws DatabaseException {
+	private DocumentFields() throws DatabaseException {
 		super("fispe_titel_dokuart", SQL);
 	}
 
-	public static D3ExDocFields getDefault() throws DatabaseException {
+	public static DocumentFields getDefault() throws DatabaseException {
 		if (null == _self) {
-			_self = new D3ExDocFields();
+			_self = new DocumentFields();
 		}
 		return _self;
 	}
@@ -74,7 +74,7 @@ public class D3ExDocFields extends D3ExDataTable {
 
 		String dokuartName = null;
 		try {
-			D3ExDocArts arts = D3ExDocArts.getDefault();
+			DocumentArts arts = DocumentArts.getDefault();
 			dokuartName = arts.lookFor(kue_dokuart);
 		} catch (DatabaseException ex) {
 			throw new RuntimeException(ex);

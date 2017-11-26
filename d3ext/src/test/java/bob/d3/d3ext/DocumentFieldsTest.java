@@ -3,13 +3,13 @@ package bob.d3.d3ext;
 import org.junit.Assert;
 import org.junit.Test;
 
-import bob.d3.d3ext.D3ExException.DatabaseException;
+import bob.d3.D3ExException.DatabaseException;
 
-public class D3ExDocFieldsTest {
+public class DocumentFieldsTest {
 
 	@Test
 	public void testGetDefault() throws DatabaseException {
-		D3ExDocFields x = D3ExDocFields.getDefault();
+		DocumentFields x = DocumentFields.getDefault();
 		Assert.assertNotNull(x);
 		String f = x.lookFor("RECH", 5);
 		System.out.println("RECH (5) = " + f);

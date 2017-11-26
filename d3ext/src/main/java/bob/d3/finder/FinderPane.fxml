@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="382.0" prefWidth="498.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bob.d3.finder.FinderController">
+   <children>
+      <BorderPane prefHeight="382.0" prefWidth="498.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+         <top>
+            <BorderPane BorderPane.alignment="CENTER">
+               <center>
+                  <TextField fx:id="tfInput" BorderPane.alignment="CENTER" />
+               </center>
+               <right>
+                  <Button fx:id="btnSearch" mnemonicParsing="false" onAction="#startSearch" text="Suche starten" BorderPane.alignment="CENTER">
+                     <BorderPane.margin>
+                        <Insets left="5.0" />
+                     </BorderPane.margin>
+                  </Button>
+               </right>
+               <BorderPane.margin>
+                  <Insets bottom="5.0" />
+               </BorderPane.margin>
+            </BorderPane>
+         </top>
+         <center>
+            <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
+                     <children>
+                        <TextArea fx:id="taOutput" editable="false" prefHeight="355.0" prefWidth="496.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                     </children>
+                  </AnchorPane>
+              </content>
+            </ScrollPane>
+         </center>
+         <bottom>
+            <Label fx:id="laPath" text="memory path" BorderPane.alignment="TOP_LEFT">
+               <BorderPane.margin>
+                  <Insets top="2.0" />
+               </BorderPane.margin></Label>
+         </bottom>
+      </BorderPane>
+   </children>
+</AnchorPane>

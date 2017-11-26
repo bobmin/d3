@@ -1,11 +1,11 @@
-package bob.d3.d3ext;
+package bob.d3;
 
 import java.io.InputStream;
 import java.util.Scanner;
 
-import bob.d3.d3ext.D3ExException.ResourceException;
+import bob.d3.D3ExException.ResourceException;
 
-public class D3ExResource {
+public class ResourceFile {
 
 	private static final String CHARSET = "UTF8";
 
@@ -13,7 +13,7 @@ public class D3ExResource {
 
 	private final String content;
 
-	public D3ExResource(final String path) throws ResourceException {
+	public ResourceFile(final String path) throws ResourceException {
 		if (null == path) {
 			throw new D3ExException.ResourceException("[path] may not NULL", null);
 		}
@@ -22,7 +22,7 @@ public class D3ExResource {
 
 	private String read(final String path) throws ResourceException {
 		StringBuilder sb = null;
-		final InputStream io = D3ExResource.class.getResourceAsStream(path);
+		final InputStream io = ResourceFile.class.getResourceAsStream(path);
 		if (null == io) {
 			throw new D3ExException.ResourceException("[path] cannot found: " + path, null);
 		}

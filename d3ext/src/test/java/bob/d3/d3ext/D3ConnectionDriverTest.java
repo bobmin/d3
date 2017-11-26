@@ -5,13 +5,13 @@ import java.sql.Connection;
 import org.junit.Assert;
 import org.junit.Test;
 
-import bob.d3.d3ext.D3ExException.DatabaseException;
+import bob.d3.D3ExException.DatabaseException;
 
-public class D3ExDatabaseTest {
+public class D3ConnectionDriverTest {
 
 	@Test
 	public void testCreateConnection() throws DatabaseException {
-		Connection conn = D3ExDatabase.createConnection();
+		Connection conn = D3ConnectionDriver.createConnection();
 		Assert.assertNotNull(conn);
 	}
 

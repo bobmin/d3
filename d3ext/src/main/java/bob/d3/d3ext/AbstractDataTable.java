@@ -6,19 +6,20 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Logger;
 
-import bob.d3.d3ext.D3ExException.DatabaseException;
+import bob.d3.D3ExException;
+import bob.d3.D3ExException.DatabaseException;
 
-public abstract class D3ExDataTable {
+public abstract class AbstractDataTable {
 
 	/** der Logger */
-	private static final Logger LOG = Logger.getLogger(D3ExDocArts.class.getName());
+	private static final Logger LOG = Logger.getLogger(AbstractDataTable.class.getName());
 
-	public D3ExDataTable(final String tablename, final String sql) throws DatabaseException {
+	public AbstractDataTable(final String tablename, final String sql) throws DatabaseException {
 		Connection conn = null;
 		Statement stmt = null;
 		ResultSet rs = null;
 		try {
-			conn = D3ExDatabase.createConnection();
+			conn = D3ConnectionDriver.createConnection();
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(sql);
 			StringBuffer logging = new StringBuffer();

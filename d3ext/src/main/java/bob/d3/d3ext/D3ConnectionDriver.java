@@ -4,23 +4,22 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import bob.d3.d3ext.D3ExException.DatabaseException;
+import bob.d3.D3Config;
+import bob.d3.D3ExException;
+import bob.d3.D3ExException.DatabaseException;
 
-public class D3ExDatabase {
-
-	private static final String DRIVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
+public class D3ConnectionDriver {
 
 	/** die lokale Benutzerkonfiguration */
-	private static final D3ExConfig CONFIG = D3ExConfig.getDefault();
+	private static final D3Config CONFIG = D3Config.getDefault();
 
 	// @formatter:off
 	private static final String URL = "jdbc:sqlserver://172.16.1.9;database=D3P;"
-			+ "username=" + CONFIG.getProperty(D3ExConfig.DATABASE_USERNAME) + ";"
-			+ "password=" + CONFIG.getProperty(D3ExConfig.DATABASE_PASSWORD);
+			+ "username=" + CONFIG.getProperty(D3Config.DATABASE_USERNAME) + ";"
+			+ "password=" + CONFIG.getProperty(D3Config.DATABASE_PASSWORD);
 	// @formatter:on
 
-	private D3ExDatabase() {
-	}
+	private static final String DRIVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
 
 	public static Connection createConnection() throws DatabaseException {
 		try {

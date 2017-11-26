@@ -6,9 +6,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import bob.d3.d3ext.D3ExException.DatabaseException;
+import bob.d3.D3ExException.DatabaseException;
 
-public class D3ExDocArts extends D3ExDataTable {
+public class DocumentArts extends AbstractDataTable {
 
 	// @formatter:off
 	private static final String SQL = "SELECT "
@@ -18,17 +18,17 @@ public class D3ExDocArts extends D3ExDataTable {
 			+ "ORDER BY kue_dokuart";
 	// @formatter:on
 
-	private static D3ExDocArts _self = null;
+	private static DocumentArts _self = null;
 
 	private static Map<String, String> data = new LinkedHashMap<>();
 
-	private D3ExDocArts() throws DatabaseException {
+	private DocumentArts() throws DatabaseException {
 		super("dokuart_langtexte", SQL);
 	}
 
-	public static D3ExDocArts getDefault() throws DatabaseException {
+	public static DocumentArts getDefault() throws DatabaseException {
 		if (null == _self) {
-			_self = new D3ExDocArts();
+			_self = new DocumentArts();
 		}
 		return _self;
 	}

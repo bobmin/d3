@@ -1,4 +1,4 @@
-package bob.d3.d3ext;
+package bob.d3;
 
 public class D3ExException extends Exception {
 

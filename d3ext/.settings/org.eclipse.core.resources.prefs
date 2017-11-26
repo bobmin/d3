@@ -1,2 +1,3 @@
 eclipse.preferences.version=1
-encoding//src/main/java/bob/d3/d3ext/D3ExConfig.java=UTF-8
+encoding//src/main/java/bob/d3/D3Config.java=UTF-8
+encoding//src/main/resources/memory_prop_longtext.txt=UTF-8

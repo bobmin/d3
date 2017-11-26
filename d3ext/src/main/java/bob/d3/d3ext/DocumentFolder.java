@@ -6,12 +6,14 @@ import java.util.List;
 import java.util.Objects;
 import java.util.logging.Logger;
 
-import bob.d3.d3ext.D3ExException.SourceException;
+import bob.d3.D3Config;
+import bob.d3.D3ExException;
+import bob.d3.D3ExException.SourceException;
 
-public class D3ExSourceFolder {
+public class DocumentFolder {
 
 	/** der Logger */
-	private static final Logger LOG = Logger.getLogger(D3ExSourceFolder.class.getName());
+	private static final Logger LOG = Logger.getLogger(DocumentFolder.class.getName());
 
 	private static final String SOURCE_PATH_KEY = "D3ExSourceFolder.source_path";
 
@@ -21,14 +23,14 @@ public class D3ExSourceFolder {
 
 	private final boolean development;
 
-	private D3ExSourceFolder(File root) {
+	private DocumentFolder(File root) {
 		Objects.requireNonNull(root);
 		this.root = root;
-		development = D3ExConfig.getDefault().isDevelomentActiv();
+		development = D3Config.getDefault().isDevelomentActiv();
 	}
 
-	public static D3ExSourceFolder create() throws SourceException {
-		D3ExConfig cfg = D3ExConfig.getDefault();
+	public static DocumentFolder create() throws SourceException {
+		D3Config cfg = D3Config.getDefault();
 		String path = cfg.getProperty(SOURCE_PATH_KEY);
 		if (null == path) {
 			throw new D3ExException.SourceException("[path] is unknown in configuration, key = " + SOURCE_PATH_KEY,
@@ -38,7 +40,7 @@ public class D3ExSourceFolder {
 		if (!f.exists()) {
 			throw new D3ExException.SourceException("[path] does not exist: " + path, null);
 		}
-		D3ExSourceFolder x = new D3ExSourceFolder(f);
+		DocumentFolder x = new DocumentFolder(f);
 		return x;
 	}
 

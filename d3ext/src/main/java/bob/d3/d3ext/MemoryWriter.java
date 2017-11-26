@@ -3,41 +3,35 @@ package bob.d3.d3ext;
 import java.io.File;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.logging.Logger;
 
-import bob.d3.d3ext.D3ExDocFactory.D3ExDoc;
-import bob.d3.d3ext.D3ExDocFactory.D3ExProp;
-import bob.d3.d3ext.D3ExException.LocalDatabaseException;
+import bob.d3.Document;
+import bob.d3.MemoryConnectionDriver;
+import bob.d3.Property;
 import bob.h2db.DatabaseManager;
 import bob.h2db.DatabaseManager.ModifyCmd;
 
-public class D3ExMemory {
+public class MemoryWriter {
 
-	private final DatabaseManager db;
+	private static final Logger LOG = Logger.getLogger(MemoryWriter.class.getName());
 
-	private D3ExMemory(DatabaseManager db) {
-		this.db = db;
-	}
+	private static final String[] TABLES = new String[] { "document", "property" };
 
-	public static D3ExMemory getPath(final String root) throws LocalDatabaseException {
-		// Access
-		D3ExConfig cfg = D3ExConfig.getDefault();
-		String user = cfg.getProperty("D3ExLocalDatabase.username");
-		String pass = cfg.getProperty("D3ExLocalDatabase.password");
-		// Path
-		File path = new File(root, "d3exdb");
-		// Tables
-		String[] tables = new String[] { "document", "property" };
-		try {
-			DatabaseManager db = new DatabaseManager(user, pass, path, "d3exdb", tables);
-			D3ExMemory loc = new D3ExMemory(db);
-			return loc;
-		} catch (ClassNotFoundException | SQLException ex) {
-			throw new D3ExException.LocalDatabaseException("local database corrupt", ex);
+	// private final MemoryConnectionDriver mem;
+
+	private DatabaseManager mgr;
+
+	public MemoryWriter(final File folder) throws ClassNotFoundException, SQLException {
+		if (!folder.exists()) {
+			folder.mkdirs();
+			LOG.fine(String.format("path created: %s", folder.getAbsolutePath()));
 		}
+		MemoryConnectionDriver mem = MemoryConnectionDriver.getDefault(folder);
+		this.mgr = new DatabaseManager(mem, TABLES);
 	}
 
 	public void saveFile(String id, String art, int nr, String dir, String name, String ext, long bytes)
-			throws LocalDatabaseException {
+			throws ClassNotFoundException, SQLException {
 		ModifyCmd cmd = new ModifyCmd() {
 
 			@Override
@@ -80,10 +74,11 @@ public class D3ExMemory {
 			}
 
 		};
-		run(cmd);
+		mgr.runDml(cmd);
 	}
 
-	public void saveProp(String id, String column, String label, String value) throws LocalDatabaseException {
+	public void saveProp(String id, String column, String label, String value)
+			throws ClassNotFoundException, SQLException {
 		ModifyCmd cmd = new ModifyCmd() {
 
 			@Override
@@ -120,31 +115,24 @@ public class D3ExMemory {
 			}
 
 		};
-		run(cmd);
+		mgr.runDml(cmd);
 	}
 
-	private void run(ModifyCmd cmd) throws LocalDatabaseException {
-		try {
-			db.runDml(cmd);
-		} catch (ClassNotFoundException | SQLException ex) {
-			throw new LocalDatabaseException(cmd.getErrorMessage(), ex);
-		}
-	}
-
-	public void pull(D3ExDoc doc) throws LocalDatabaseException {
+	public void pull(Document doc) throws ClassNotFoundException, SQLException {
 		String id = doc.getId();
 
 		File f = doc.getFile();
 		String name = (null == f ? null : f.getName());
 		saveFile(id, doc.getArt(), doc.getDokuNr(), doc.getFolder(), name, doc.getErw(), doc.getSize());
 
-		for (D3ExProp p : doc.getProps()) {
+		for (Property p : doc.getProps()) {
 			saveProp(id, p.getColumnName(), p.getLongtext(), p.getValue());
 		}
 	}
 
 	public void close() {
-		db.close();
+		mgr.close();
 	}
+
 
 }

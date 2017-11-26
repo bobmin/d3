@@ -11,20 +11,21 @@ import java.io.OutputStream;
 import java.util.Objects;
 import java.util.logging.Logger;
 
-import bob.d3.d3ext.D3ExDocFactory.D3ExDoc;
-import bob.d3.d3ext.D3ExDocFactory.D3ExProp;
-import bob.d3.d3ext.D3ExException.ConfigException;
-import bob.d3.d3ext.D3ExException.WriterException;
+import bob.d3.D3ExException;
+import bob.d3.D3ExException.ConfigException;
+import bob.d3.D3ExException.WriterException;
+import bob.d3.Document;
+import bob.d3.Property;
 
-public class D3ExWriter {
+public class TextWriter {
 
 	/** der Logger */
-	private static final Logger LOG = Logger.getLogger(D3ExWriter.class.getName());
+	private static final Logger LOG = Logger.getLogger(TextWriter.class.getName());
 
 	/** das Wurzelverzeichnis */
 	private final File root;
 
-	public D3ExWriter(final String path) throws ConfigException {
+	public TextWriter(final String path) throws ConfigException {
 		Objects.requireNonNull(path);
 		this.root = new File(path);
 		if (!root.exists()) {
@@ -33,7 +34,7 @@ public class D3ExWriter {
 		LOG.info("path assigned: " + path);
 	}
 
-	public void pull(final D3ExDoc doc) throws WriterException {
+	public void pull(final Document doc) throws WriterException {
 		File f = new File(root, doc.getFolder());
 		f.mkdirs();
 		writeTextfile(f, doc);
@@ -43,7 +44,7 @@ public class D3ExWriter {
 		LOG.info("document exported: " + doc.getId());
 	}
 
-	private void writeTextfile(final File folder, final D3ExDoc doc) throws WriterException {
+	private void writeTextfile(final File folder, final Document doc) throws WriterException {
 		final String id = doc.getId();
 		File file = new File(folder, id + ".txt");
 		BufferedWriter writer = null;
@@ -54,7 +55,7 @@ public class D3ExWriter {
 			writeLine(writer, "DOKUMENTENART", formatDokuart(dokuart, doc.getArtLong()));
 			writeLine(writer, "DOKUMENTNUMMER", String.valueOf(doc.getDokuNr()));
 
-			for (D3ExProp p : doc.getProps()) {
+			for (Property p : doc.getProps()) {
 				String key;
 				if (p.hasLongtext()) {
 					key = String.format("%s [%s]", p.getLongtext(), p.getColumnName());
@@ -107,7 +108,7 @@ public class D3ExWriter {
 		writer.newLine();
 	}
 
-	private void copyAttachment(final File folder, final D3ExDoc doc) throws WriterException {
+	private void copyAttachment(final File folder, final Document doc) throws WriterException {
 		String id = doc.getId();
 		InputStream in = null;
 		OutputStream out = null;

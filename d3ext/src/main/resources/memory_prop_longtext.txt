@@ -1,0 +1,24 @@
+Ansprechpartner	3_478_971
+Auftrags-Nr.	9_603_274
+Belegdatum	6_206_933
+Bestell-Nr.	490_872
+Briefnummer	25_938
+Datum	1_609
+Fahrer-Nr.	6
+Gruppen-Nr.	1_556
+Gruppenname	1_557
+Gutschrifts-Nr.	2
+Jahr	74_597
+Kostenstelle	3_212_823
+Kostentr�ger	3_472_993
+Kunden-Nr.	9_743_628
+Kundenname	9_347_629
+Kündigungsdatum	219
+Lieferanten-Nr.	494_859
+Lieferantenname	494_911
+Packnummer	5_408_393
+Rechnungs-Nr.	5_816_727
+Text-Typ	25_939
+Vorgangs-Nr.	5_716
+ext.Rechnungsnr	6
+int. Beleg-Nr.	306_997

@@ -1,10 +1,12 @@
 package bob.d3.d3ext;
 
 import java.io.File;
+import java.sql.SQLException;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
-import bob.d3.d3ext.D3ExDocFactory.D3ExDoc;
+import bob.d3.D3ExException;
+import bob.d3.Document;
 
 /**
  * Das Programm liest gespeicherte Dokumente und deren Eigenschaften aus der
@@ -16,10 +18,10 @@ import bob.d3.d3ext.D3ExDocFactory.D3ExDoc;
  * @author maik@btmx.net
  *
  */
-public class D3ExTool {
+public class ExportTool {
 
 	/** der Logger */
-	private static final Logger LOG = Logger.getLogger(D3ExTool.class.getName());
+	private static final Logger LOG = Logger.getLogger(ExportTool.class.getName());
 
 	/** der Zeitpunkt vom Programmstart */
 	private static final long startTimeMillis = System.currentTimeMillis();
@@ -31,26 +33,29 @@ public class D3ExTool {
 	 *            die Argumente
 	 * @throws D3ExException
 	 *             wenn Probleme beim Programmablauf
+	 * @throws SQLException
+	 * @throws ClassNotFoundException
 	 */
-	public static void main(String[] args) throws D3ExException {
+	public static void main(String[] args) throws D3ExException, ClassNotFoundException, SQLException {
 		if (0 < args.length) {
 			final String exportPath = args[0];
 			final boolean onlyDatabase = (1 < args.length ? "--onlyDatabase".equals(args[1]) : false);
 
 			log("Program starts...\n\texport path = " + exportPath + "\n\tonly database = " + onlyDatabase);
 
-			final D3ExMemory memory = D3ExMemory.getPath(exportPath);
+			File path = new File(exportPath);
+			final MemoryWriter memory = new MemoryWriter(path);
 
-			D3ExWriter writer = (onlyDatabase ? null : new D3ExWriter(exportPath));
-			D3ExSourceFolder src = (onlyDatabase ? null : D3ExSourceFolder.create());
+			TextWriter writer = (onlyDatabase ? null : new TextWriter(exportPath));
+			DocumentFolder src = (onlyDatabase ? null : DocumentFolder.create());
 
-			D3ExDocFactory fac = null;
+			D3Reader fac = null;
 			try {
-				fac = D3ExDocFactory.create("/query_docs_all.sql");
+				fac = new D3Reader("/query_docs_all.sql");
 				if (fac.open()) {
 					int count = 0;
 					do {
-						D3ExDoc doc = fac.getDoc();
+						Document doc = fac.getDoc();
 						if (null != doc) {
 							if (null != writer) {
 								// Datei suchen
