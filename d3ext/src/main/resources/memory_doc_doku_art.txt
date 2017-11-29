@@ -1,0 +1,32 @@
+SCGR	Sortimentscharts Gruppe	1_074
+VEGP	Verhandlungsprotokoll Gruppe	12
+ELIEF	Eingangslieferschein	315_865
+$LOG$	Logging	61
+VRGP	Verträge Gruppe	212
+RPIN	Renner-Penner intern	9_776
+PRBE	Presseberichte	16
+PRGP	Presseberichte Gruppe	47
+VEPR	Verhandlungsprotokolle	1
+BEAK	Bestellakte	203_857
+GUTS	Gutschrift	2
+VERT	Verträge	955
+LIEAK	Lieferantenakte	3_711
+BRIL	Brief Lieferant	3_721
+KUAK	Kundenakte	43_136
+BRIK	Brief Kunde	22_242
+GRAK	Gruppen-Akte	107
+SDAG	strategische Dokumente Gruppe	107
+EMSC	Empfangsschein	236_569
+RECH	Rechnung	3_487_649
+GELB	Gelangensbestätigung	100
+ERE	Eingangsrechnung	6
+SDAK	strategische Dokumente Kunde	28_162
+SCKU	Sortimentscharts Kunde	26_015
+AUAK	Auftragsakte	3_821_845
+ALIEF	Ausgangslieferschein	2_099_004
+RPEX	Renner-Penner extern	9_761
+BEST	Bestellung	0
+KOLI	Kommisionierlisten	0
+RPEG	Renner-Penner extern Gruppe	0
+VRIN	Verträge Intern	0
+ZTNG	Zeitungen	0

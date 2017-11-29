@@ -1,15 +1,14 @@
 package bob.d3.export;
 
+import java.sql.SQLException;
+
 import org.junit.Assert;
 import org.junit.Test;
-
-import bob.d3.D3ExException.DatabaseException;
-import bob.d3.export.DocumentFields;
 
 public class DocumentFieldsTest {
 
 	@Test
-	public void testGetDefault() throws DatabaseException {
+	public void testGetDefault() throws ClassNotFoundException, SQLException {
 		DocumentFields x = DocumentFields.getDefault();
 		Assert.assertNotNull(x);
 		String f = x.lookFor("RECH", 5);

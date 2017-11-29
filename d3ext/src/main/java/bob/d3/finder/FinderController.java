@@ -18,6 +18,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 
 public class FinderController implements Initializable {
 
@@ -42,10 +44,17 @@ public class FinderController implements Initializable {
 	}
 
 	@FXML
+	void keyPressed(KeyEvent evt) {
+		if (evt.getCode().equals(KeyCode.ENTER)) {
+			startSearch(null);
+		}
+	}
+
+	@FXML
 	void startSearch(ActionEvent event) {
 		String input = tfInput.getText();
 
-		SqlGenerator gen = new SqlGenerator(input);
+		SqlQuery gen = new SqlQuery(input);
 		String sql = gen.getCommand();
 		taOutput.appendText(sql + "\n");
 

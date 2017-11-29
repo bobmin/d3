@@ -3,7 +3,7 @@ package bob.d3.finder;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class SqlGeneratorTest {
+public class SqlQueryTest {
 
 	// @formatter:off
 	private static final String[][] DATA = {
@@ -36,12 +36,12 @@ public class SqlGeneratorTest {
 	public void testGetCommand() {
 		for (String[] x : DATA) {
 			final String value = x[0];
-			final String expected = x[1].replaceFirst("#START", SqlGenerator.START).replaceFirst("#TAIL",
-					SqlGenerator.TAIL);
+			final String expected = x[1].replaceFirst("#START", SqlQuery.START).replaceFirst("#TAIL",
+					SqlQuery.TAIL);
 			System.out.println("value: \"" + value + "\"\n\t\"" + expected + "\"");
 			Assert.assertTrue(expected.contains("SELECT"));
 			Assert.assertTrue(expected.contains("FROM"));
-			SqlGenerator generator = new SqlGenerator(value);
+			SqlQuery generator = new SqlQuery(value);
 			final String command = generator.getCommand();
 			System.out.println("\t\"" + command + "\"");
 			System.out.println("\t" + generator);

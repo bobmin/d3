@@ -9,11 +9,11 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import bob.d3.D3ExException;
+import bob.d3.D3ExException.DatabaseException;
+import bob.d3.D3ExException.ResourceException;
 import bob.d3.Document;
 import bob.d3.Property;
 import bob.d3.ResourceFile;
-import bob.d3.D3ExException.DatabaseException;
-import bob.d3.D3ExException.ResourceException;
 
 public class D3Reader {
 
@@ -46,23 +46,22 @@ public class D3Reader {
 	 * @throws DatabaseException
 	 * @throws ResourceException
 	 *             wenn Abfrage nicht gelesen werden kann
+	 * @throws SQLException
+	 * @throws ClassNotFoundException
 	 */
-	public D3Reader(final String path) throws DatabaseException, ResourceException {
+	public D3Reader(final String path)
+			throws ResourceException, ClassNotFoundException, SQLException, DatabaseException {
 		ResourceFile res = new ResourceFile(path);
 		this.loopSql = res.getText();
 		arts = DocumentArts.getDefault();
 		fields = DocumentFields.getDefault();
 	}
 
-	public boolean open() throws DatabaseException {
-		try {
-			conn = D3ConnectionDriver.createConnection();
-			loopStmt = conn.createStatement();
-			loopRs = loopStmt.executeQuery(loopSql);
-			return loopRs.next();
-		} catch (SQLException ex) {
-			throw new D3ExException.DatabaseException("cannot open database", ex);
-		}
+	public boolean open() throws ClassNotFoundException, SQLException {
+		conn = D3ConnectionDriver.createConnection();
+		loopStmt = conn.createStatement();
+		loopRs = loopStmt.executeQuery(loopSql);
+		return loopRs.next();
 	}
 
 	/**

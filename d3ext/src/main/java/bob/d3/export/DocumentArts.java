@@ -6,8 +6,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import bob.d3.D3ExException.DatabaseException;
-
 public class DocumentArts extends AbstractDataTable {
 
 	// @formatter:off
@@ -22,11 +20,11 @@ public class DocumentArts extends AbstractDataTable {
 
 	private static Map<String, String> data = new LinkedHashMap<>();
 
-	private DocumentArts() throws DatabaseException {
+	private DocumentArts() throws ClassNotFoundException, SQLException {
 		super("dokuart_langtexte", SQL);
 	}
 
-	public static DocumentArts getDefault() throws DatabaseException {
+	public static DocumentArts getDefault() throws ClassNotFoundException, SQLException {
 		if (null == _self) {
 			_self = new DocumentArts();
 		}

@@ -7,8 +7,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import bob.d3.D3ExException.DatabaseException;
-
 /**
  * Felder zu Repository:
  *
@@ -37,11 +35,11 @@ public class DocumentFields extends AbstractDataTable {
 
 	private static Map<String, List<DocField>> data = null;
 
-	private DocumentFields() throws DatabaseException {
+	private DocumentFields() throws ClassNotFoundException, SQLException {
 		super("fispe_titel_dokuart", SQL);
 	}
 
-	public static DocumentFields getDefault() throws DatabaseException {
+	public static DocumentFields getDefault() throws ClassNotFoundException, SQLException {
 		if (null == _self) {
 			_self = new DocumentFields();
 		}
@@ -49,7 +47,7 @@ public class DocumentFields extends AbstractDataTable {
 	}
 
 	@Override
-	void buildObject(ResultSet rs, StringBuffer logging) throws SQLException {
+	void buildObject(ResultSet rs, StringBuffer logging) throws SQLException, ClassNotFoundException {
 		if (null == data) {
 			data = new LinkedHashMap<>();
 		}
@@ -73,12 +71,10 @@ public class DocumentFields extends AbstractDataTable {
 		logging.append("\t").append(kue_dokuart);
 
 		String dokuartName = null;
-		try {
-			DocumentArts arts = DocumentArts.getDefault();
-			dokuartName = arts.lookFor(kue_dokuart);
-		} catch (DatabaseException ex) {
-			throw new RuntimeException(ex);
-		}
+
+		DocumentArts arts = DocumentArts.getDefault();
+		dokuartName = arts.lookFor(kue_dokuart);
+
 		logging.append(" [").append(dokuartName).append("]");
 
 		logging.append(" + ").append(dok_dat_titel).append(" (").append(dok_dat_feld_nr).append(")");

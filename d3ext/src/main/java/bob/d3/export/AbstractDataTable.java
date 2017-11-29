@@ -6,15 +6,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Logger;
 
-import bob.d3.D3ExException;
-import bob.d3.D3ExException.DatabaseException;
-
 public abstract class AbstractDataTable {
 
 	/** der Logger */
 	private static final Logger LOG = Logger.getLogger(AbstractDataTable.class.getName());
 
-	public AbstractDataTable(final String tablename, final String sql) throws DatabaseException {
+	public AbstractDataTable(final String tablename, final String sql) throws ClassNotFoundException, SQLException {
 		Connection conn = null;
 		Statement stmt = null;
 		ResultSet rs = null;
@@ -32,8 +29,6 @@ public abstract class AbstractDataTable {
 				buildObject(rs, logging);
 			}
 			LOG.info(logging.toString());
-		} catch (SQLException ex) {
-			throw new D3ExException.DatabaseException("table \"dokuart_langtexte\" not readable", ex);
 		} finally {
 			if (null != rs) {
 				try {
@@ -59,6 +54,6 @@ public abstract class AbstractDataTable {
 		}
 	}
 
-	abstract void buildObject(ResultSet rs, StringBuffer logging) throws SQLException;
+	abstract void buildObject(ResultSet rs, StringBuffer logging) throws SQLException, ClassNotFoundException;
 
 }

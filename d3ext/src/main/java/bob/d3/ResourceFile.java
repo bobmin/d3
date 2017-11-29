@@ -1,6 +1,7 @@
 package bob.d3;
 
 import java.io.InputStream;
+import java.util.Objects;
 import java.util.Scanner;
 
 import bob.d3.D3ExException.ResourceException;
@@ -14,9 +15,7 @@ public class ResourceFile {
 	private final String content;
 
 	public ResourceFile(final String path) throws ResourceException {
-		if (null == path) {
-			throw new D3ExException.ResourceException("[path] may not NULL", null);
-		}
+		Objects.requireNonNull(path);
 		this.content = read(path);
 	}
 

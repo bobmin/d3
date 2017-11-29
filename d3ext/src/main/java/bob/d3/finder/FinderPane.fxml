@@ -12,7 +12,7 @@
          <top>
             <BorderPane BorderPane.alignment="CENTER">
                <center>
-                  <TextField fx:id="tfInput" BorderPane.alignment="CENTER" />
+                  <TextField fx:id="tfInput" onKeyPressed="#keyPressed" BorderPane.alignment="CENTER" />
                </center>
                <right>
                   <Button fx:id="btnSearch" mnemonicParsing="false" onAction="#startSearch" text="Suche starten" BorderPane.alignment="CENTER">

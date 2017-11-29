@@ -37,48 +37,49 @@ public class ExportTool {
 	 * @throws ClassNotFoundException
 	 */
 	public static void main(String[] args) throws D3ExException, ClassNotFoundException, SQLException {
-		if (0 < args.length) {
-			final String exportPath = args[0];
-			final boolean onlyDatabase = (1 < args.length ? "--onlyDatabase".equals(args[1]) : false);
-
-			log("Program starts...\n\texport path = " + exportPath + "\n\tonly database = " + onlyDatabase);
-
-			File path = new File(exportPath);
-			final MemoryWriter memory = new MemoryWriter(path);
-
-			TextWriter writer = (onlyDatabase ? null : new TextWriter(exportPath));
-			DocumentFolder src = (onlyDatabase ? null : DocumentFolder.create());
-
-			D3Reader fac = null;
-			try {
-				fac = new D3Reader("/query_docs_all.sql");
-				if (fac.open()) {
-					int count = 0;
-					do {
-						Document doc = fac.getDoc();
-						if (null != doc) {
-							if (null != writer) {
-								// Datei suchen
-								final File f = src.lookFor(doc.getId(), doc.getFolder(), doc.getErw());
-								doc.setFile(f);
-								// Textdatei schreiben
-								writer.pull(doc);
-							}
-							memory.pull(doc);
-						}
-						log(String.format("[%d] document %s pulled", ++count, doc.getId()));
-					} while (fac.next());
-				}
-			} finally {
-				if (null != fac) {
-					fac.close();
-				}
-				memory.close();
-			}
-			log("Program finished. Bye!");
-		} else {
-			System.out.println("usage: java -cp ... bob.d3.d3ext.D3ExTool <path>");
+		if (!(1 == args.length || 2 == args.length)) {
+			System.out.println("usage: java -cp ... bob.d3.export.ExportTool <path> [--onlyDatabase]");
+			System.exit(-1);
 		}
+
+		final String exportPath = args[0];
+		final boolean onlyDatabase = (1 < args.length ? "--onlyDatabase".equals(args[1]) : false);
+
+		log("Program starts...\n\texport path = " + exportPath + "\n\tonly database = " + onlyDatabase);
+
+		File path = new File(exportPath);
+		final MemoryWriter memory = new MemoryWriter(path);
+
+		TextWriter writer = (onlyDatabase ? null : new TextWriter(exportPath));
+		DocumentFolder src = (onlyDatabase ? null : DocumentFolder.create());
+
+		D3Reader fac = null;
+		try {
+			fac = new D3Reader("/query_docs_all.sql");
+			if (fac.open()) {
+				int count = 0;
+				do {
+					Document doc = fac.getDoc();
+					if (null != doc) {
+						if (null != writer) {
+							// Datei suchen
+							final File f = src.lookFor(doc.getId(), doc.getFolder(), doc.getErw());
+							doc.setFile(f);
+							// Textdatei schreiben
+							writer.pull(doc);
+						}
+						memory.pull(doc);
+					}
+					log(String.format("[%d] document %s pulled", ++count, doc.getId()));
+				} while (fac.next());
+			}
+		} finally {
+			if (null != fac) {
+				fac.close();
+			}
+			memory.close();
+		}
+		log("Program finished. Bye!");
 
 	}
 

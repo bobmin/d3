@@ -10,7 +10,7 @@ Gruppenname	1_557
 Gutschrifts-Nr.	2
 Jahr	74_597
 Kostenstelle	3_212_823
-Kostentr�ger	3_472_993
+Kostenträger	3_472_993
 Kunden-Nr.	9_743_628
 Kundenname	9_347_629
 Kündigungsdatum	219

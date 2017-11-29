@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
  * @author maik@btmx.net
  *
  */
-public class SqlGenerator {
+public class SqlQuery {
 
 	static final String START = "SELECT * FROM document INNER JOIN property ON doc_id = prop_doc_id";
 
@@ -26,7 +26,7 @@ public class SqlGenerator {
 
 	private String lnrValue = null;
 
-	public SqlGenerator(final String input) {
+	public SqlQuery(final String input) {
 		Objects.requireNonNull(input);
 		if (-1 < input.indexOf("id = ")) {
 			idValues = new LinkedList<>();

@@ -1,5 +1,6 @@
 package bob.d3.export;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import org.junit.Assert;
@@ -7,14 +8,13 @@ import org.junit.Test;
 
 import bob.d3.D3ExException.DatabaseException;
 import bob.d3.D3ExException.ResourceException;
-import bob.d3.export.D3Reader;
 import bob.d3.Document;
 import bob.d3.Property;
 
 public class D3ReaderTest {
 
 	@Test
-	public void testOpenGetDocNext() throws ResourceException, DatabaseException {
+	public void testOpenGetDocNext() throws ResourceException, ClassNotFoundException, SQLException, DatabaseException {
 		D3Reader fac = null;
 		try {
 			fac = new D3Reader("/query_docs_demo.sql");
