@@ -3,13 +3,11 @@ package bob.d3;
 import org.junit.Assert;
 import org.junit.Test;
 
-import bob.d3.D3ExException;
-import bob.d3.ResourceFile;
 import bob.d3.D3ExException.ResourceException;
 
 public class ResourceFileTest {
 
-	@Test(expected = D3ExException.ResourceException.class)
+	@Test(expected = NullPointerException.class)
 	public void testPathNull() throws ResourceException {
 		new ResourceFile(null);
 	}

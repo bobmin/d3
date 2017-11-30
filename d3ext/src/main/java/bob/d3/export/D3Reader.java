@@ -83,7 +83,8 @@ public class D3Reader {
 			String erw = loopRs.getString("datei_erw").trim();
 			int nr = loopRs.getInt("doku_nr");
 
-			doc = new Document(id, artShort, size, dir, erw, nr);
+			// FIXME einbring_datum + sterbe-Datum von D3 lesen/schreiben
+			doc = new Document(id, null, artShort, size, dir, erw, nr, null);
 
 			setupDocument(doc, loopRs);
 

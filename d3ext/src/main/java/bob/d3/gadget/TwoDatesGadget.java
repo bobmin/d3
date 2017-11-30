@@ -1,4 +1,4 @@
-package bob.d3.export;
+package bob.d3.gadget;
 
 import java.io.File;
 import java.sql.Connection;
@@ -7,21 +7,19 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import bob.d3.ConsoleUtil;
 import bob.d3.D3ExException.ResourceException;
 import bob.d3.MemoryConnectionDriver;
 import bob.d3.ResourceFile;
+import bob.d3.export.D3ConnectionDriver;
 
 public class TwoDatesGadget {
 
 	/** der Logger */
 	private static final Logger LOG = Logger.getLogger(TwoDatesGadget.class.getName());
-
-	/** der Zeitpunkt vom Programmstart */
-	private static final long startTimeMillis = System.currentTimeMillis();
 
 	public static void main(String[] args) throws ClassNotFoundException, SQLException, ResourceException {
 		if (!(1 == args.length)) {
@@ -30,7 +28,7 @@ public class TwoDatesGadget {
 		}
 
 		final String exportPath = args[0];
-		log("Program starts...\n\texport path = " + exportPath);
+		ConsoleUtil.log("Program starts...\n\texport path = " + exportPath);
 
 		Connection d3conn = null;
 		PreparedStatement d3stmt = null;
@@ -43,7 +41,7 @@ public class TwoDatesGadget {
 		PreparedStatement memUpdateStmt = null;
 
 		try {
-			MemoryConnectionDriver driver = MemoryConnectionDriver.getDefault(new File(exportPath, "d3exdb"));
+			MemoryConnectionDriver driver = MemoryConnectionDriver.create(new File(exportPath, "d3exdb"));
 			memConn = driver.createConnection();
 
 			d3conn = D3ConnectionDriver.createConnection();
@@ -107,7 +105,7 @@ public class TwoDatesGadget {
 				d3stmt.clearParameters();
 				++count;
 				if ((count % 500) == 0) {
-					log(String.format("(%d) %s...", count, id));
+					ConsoleUtil.log(String.format("(%d) %s...", count, id));
 				}
 			}
 
@@ -121,7 +119,7 @@ public class TwoDatesGadget {
 			close(d3conn);
 		}
 
-		log("Program finished. Bye!");
+		ConsoleUtil.log("Program finished. Bye!");
 
 	}
 
@@ -153,14 +151,6 @@ public class TwoDatesGadget {
 				LOG.log(Level.WARNING, "cannot close", ex);
 			}
 		}
-	}
-
-	private static void log(final String msg) {
-		long interval = System.currentTimeMillis() - startTimeMillis;
-		final long hr = TimeUnit.MILLISECONDS.toHours(interval);
-		final long min = TimeUnit.MILLISECONDS.toMinutes(interval) % 60;
-		final long sec = TimeUnit.MILLISECONDS.toSeconds(interval) % 60;
-		LOG.info(String.format("%02d:%02d:%02d %s", hr, min, sec, msg));
 	}
 
 }

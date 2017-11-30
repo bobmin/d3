@@ -3,17 +3,17 @@ package bob.d3.finder;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class MemoryPropLongtextTest {
+public class MemoryPropsCacheTest {
 
 	@Test
 	public void testGetDefault() {
-		MemoryPropLongtext x = MemoryPropLongtext.getDefault();
+		MemoryPropsCache x = MemoryPropsCache.getDefault();
 		Assert.assertNotNull(x);
 	}
 
 	@Test
 	public void testGetSize() {
-		MemoryPropLongtext x = MemoryPropLongtext.getDefault();
+		MemoryPropsCache x = MemoryPropsCache.getDefault();
 		Assert.assertEquals(24, x.getSize());
 	}
 

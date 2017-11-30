@@ -8,15 +8,15 @@ import java.util.logging.Logger;
 import bob.d3.D3ExException.ResourceException;
 import bob.d3.ResourceFile;
 
-public class MemoryPropLongtext {
+public class MemoryPropsCache {
 
-	private static final Logger LOG = Logger.getLogger(MemoryPropLongtext.class.getName());
+	private static final Logger LOG = Logger.getLogger(MemoryPropsCache.class.getName());
 
 	private final List<String> data = new LinkedList<>();
 
-	private static MemoryPropLongtext _self = null;
+	private static MemoryPropsCache _self = null;
 
-	public static MemoryPropLongtext getDefault() {
+	public static MemoryPropsCache getDefault() {
 		if (null == _self) {
 			final List<String> x = new LinkedList<>();
 			try {
@@ -29,12 +29,12 @@ public class MemoryPropLongtext {
 				LOG.log(Level.SEVERE, "data file corrupt", ex);
 			}
 			LOG.info("data loaded: " + x);
-			_self = new MemoryPropLongtext(x);
+			_self = new MemoryPropsCache(x);
 		}
 		return _self;
 	}
 
-	private MemoryPropLongtext(List<String> values) {
+	private MemoryPropsCache(List<String> values) {
 		this.data.addAll(values);
 	}
 

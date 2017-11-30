@@ -1,6 +1,7 @@
 package bob.d3;
 
 import java.io.File;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -9,11 +10,13 @@ public class Document {
 	// --- Datenbankspalten --------------
 
 	private final String doku_id;
+	private final Date einbring;
 	private final String dokuart;
 	private final long size_in_byte;
 	private final String logi_verzeichnis;
 	private final String datei_erw;
 	private final int doku_nr;
+	private final Date sterbe;
 
 	// --- ENDE --------------------------
 
@@ -27,13 +30,16 @@ public class Document {
 	/** die Datei im Filesystem */
 	private File file = null;
 
-	public Document(String id, String artShort, long size, String dir, String erw, int nr) {
+	public Document(String id, Date einbring, String artShort, long size, String dir, String erw, int nr,
+			Date sterbe) {
 		this.doku_id = id;
+		this.einbring = einbring;
 		this.dokuart = artShort;
 		this.size_in_byte = size;
 		this.logi_verzeichnis = dir;
 		this.datei_erw = erw;
 		this.doku_nr = nr;
+		this.sterbe = sterbe;
 		this.folder = computeFolder(id);
 	}
 
@@ -51,6 +57,10 @@ public class Document {
 
 	public String getId() {
 		return doku_id;
+	}
+
+	public Date getEinbring() {
+		return einbring;
 	}
 
 	public String getFolder() {
@@ -113,17 +123,23 @@ public class Document {
 		return file;
 	}
 
+	public Date getSterbe() {
+		return sterbe;
+	}
+
 	@Override
 	public String toString() {
 		int propsSize = (null == props ? 0 : props.size());
 		// @formatter:off
 		return String.format("D3ExDoc [doku_id=%s"
+				+ ", einbring=%s"
 				+ ", artShort=%s, artLong=%s"
-				+ ", props=%d, nr=%d, bytes=%d, "
-				+ "dir=%s, erw=%s, path=%s]"
-				, doku_id, dokuart, artLong
+				+ ", props=%d, nr=%d, bytes=%d"
+				+ ", sterbe=%s"
+				+ ", dir=%s, erw=%s, path=%s]"
+				, doku_id, einbring, dokuart, artLong
 				, propsSize
-				, doku_nr, size_in_byte
+				, doku_nr, size_in_byte, sterbe
 				, logi_verzeichnis, datei_erw
 				, (null == file ? "null" : file.getAbsolutePath()));
 		// @formatter:on

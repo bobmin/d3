@@ -2,9 +2,9 @@ package bob.d3.export;
 
 import java.io.File;
 import java.sql.SQLException;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
+import bob.d3.ConsoleUtil;
 import bob.d3.D3ExException;
 import bob.d3.Document;
 
@@ -22,9 +22,6 @@ public class ExportTool {
 
 	/** der Logger */
 	private static final Logger LOG = Logger.getLogger(ExportTool.class.getName());
-
-	/** der Zeitpunkt vom Programmstart */
-	private static final long startTimeMillis = System.currentTimeMillis();
 
 	/**
 	 * Das Programm erwartet den Zielpfad als Argument.
@@ -45,7 +42,7 @@ public class ExportTool {
 		final String exportPath = args[0];
 		final boolean onlyDatabase = (1 < args.length ? "--onlyDatabase".equals(args[1]) : false);
 
-		log("Program starts...\n\texport path = " + exportPath + "\n\tonly database = " + onlyDatabase);
+		ConsoleUtil.log("Program starts...\n\texport path = " + exportPath + "\n\tonly database = " + onlyDatabase);
 
 		File path = new File(exportPath);
 		final MemoryWriter memory = new MemoryWriter(path);
@@ -70,7 +67,7 @@ public class ExportTool {
 						}
 						memory.pull(doc);
 					}
-					log(String.format("[%d] document %s pulled", ++count, doc.getId()));
+					ConsoleUtil.log("[%d] document %s pulled", ++count, doc.getId());
 				} while (fac.next());
 			}
 		} finally {
@@ -79,16 +76,8 @@ public class ExportTool {
 			}
 			memory.close();
 		}
-		log("Program finished. Bye!");
+		ConsoleUtil.log("Program finished. Bye!");
 
-	}
-
-	private static void log(final String msg) {
-		long interval = System.currentTimeMillis() - startTimeMillis;
-		final long hr = TimeUnit.MILLISECONDS.toHours(interval);
-		final long min = TimeUnit.MILLISECONDS.toMinutes(interval) % 60;
-		final long sec = TimeUnit.MILLISECONDS.toSeconds(interval) % 60;
-		LOG.info(String.format("%02d:%02d:%02d %s", hr, min, sec, msg));
 	}
 
 }
