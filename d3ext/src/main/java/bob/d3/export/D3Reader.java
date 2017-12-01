@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -77,14 +78,15 @@ public class D3Reader {
 		Document doc = null;
 		try {
 			String id = loopRs.getString("doku_id").trim();
+			Date einbring = loopRs.getDate("datum_einbring");
 			String artShort = loopRs.getString("dokuart").trim();
 			long size = loopRs.getLong("size_in_byte");
 			String dir = loopRs.getString("logi_verzeichnis").trim();
 			String erw = loopRs.getString("datei_erw").trim();
 			int nr = loopRs.getInt("doku_nr");
+			Date sterbe = loopRs.getDate("sterbe_datum");
 
-			// FIXME einbring_datum + sterbe-Datum von D3 lesen/schreiben
-			doc = new Document(id, null, artShort, size, dir, erw, nr, null);
+			doc = new Document(id, einbring, artShort, size, dir, erw, nr, sterbe);
 
 			setupDocument(doc, loopRs);
 

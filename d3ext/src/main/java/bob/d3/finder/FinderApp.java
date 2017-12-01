@@ -27,14 +27,17 @@ public class FinderApp extends Application {
 
 		final Parameters params = getParameters();
 		final List<String> parameters = params.getRaw();
-		final String exportPath = !parameters.isEmpty() ? parameters.get(0) : null;
+		final String memoryPath = parameters.isEmpty() ? null : parameters.get(0);
+		final String filesPath = parameters.isEmpty() ? null : parameters.get(1);
 		FinderController ctrl = loader.getController();
-		ctrl.setMemoryPath(new File(exportPath));
+		ctrl.setMemoryPath(new File(memoryPath));
+		ctrl.setFilesPath(new File(filesPath));
+		ctrl.setHostService(getHostServices());
 
 		Scene scene = new Scene(pane);
 
 		primaryStage.setScene(scene);
-		primaryStage.setTitle("D3 Export Finder");
+		primaryStage.setTitle("Document Finder");
 		primaryStage.show();
 
 	}

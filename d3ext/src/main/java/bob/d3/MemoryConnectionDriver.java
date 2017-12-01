@@ -16,7 +16,7 @@ public class MemoryConnectionDriver extends H2ConnectionDriver {
 
 	public static MemoryConnectionDriver create(final File folder) throws ClassNotFoundException, SQLException {
 		// Datenbankpfad
-		File path = new File(folder, "d3exdb");
+		File path = new File(folder, "memdb");
 		// Benutzerdaten
 		D3Config cfg = D3Config.getDefault();
 		final String user = cfg.getProperty("D3ExLocalDatabase.username");

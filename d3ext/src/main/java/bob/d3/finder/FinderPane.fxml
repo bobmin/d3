@@ -11,23 +11,34 @@
    <children>
       <VBox layoutX="5.0" layoutY="5.0" prefHeight="417.0" prefWidth="503.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <MenuBar>
+            <MenuBar fx:id="menuBar">
               <menus>
-                <Menu mnemonicParsing="false" text="File">
+                <Menu mnemonicParsing="false" text="Suchen">
                   <items>
                         <CheckMenuItem fx:id="cbIndexSearcher" mnemonicParsing="false" selected="true" text="Index durchsuchen" />
                         <CheckMenuItem fx:id="cbMemorySercher" mnemonicParsing="false" text="Datenbank durchsuchen" />
-                    <MenuItem mnemonicParsing="false" text="Close" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" onAction="#printCacheItems" text="Zwischenspeicher ausgeben" />
+                        <MenuItem mnemonicParsing="false" onAction="#lookForFile" text="Datei öffnen" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                    <MenuItem mnemonicParsing="false" text="Programm beenden" />
                   </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="Edit">
+                <Menu mnemonicParsing="false" text="Bearbeiten">
                   <items>
-                    <MenuItem mnemonicParsing="false" text="Delete" />
+                    <MenuItem mnemonicParsing="false" text="Kopieren" />
+                        <MenuItem mnemonicParsing="false" text="Einfügen" />
                   </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="Help">
+                  <Menu mnemonicParsing="false" text="Ansicht">
+                    <items>
+                        <CheckMenuItem fx:id="cbShowQuery" mnemonicParsing="false" text="Abfragen anzeigen" />
+                        <MenuItem mnemonicParsing="false" onAction="#clearOutput" text="Ausgabe löschen" />
+                    </items>
+                  </Menu>
+                <Menu mnemonicParsing="false" text="Hilfe">
                   <items>
-                    <MenuItem mnemonicParsing="false" text="About" />
+                    <MenuItem mnemonicParsing="false" onAction="#showWebsite" text="Webseite öffnen" />
                   </items>
                 </Menu>
               </menus>
@@ -62,11 +73,23 @@
                   </ScrollPane>
                </center>
                <bottom>
-                  <Label fx:id="laPath" text="memory path" BorderPane.alignment="TOP_LEFT">
-                     <BorderPane.margin>
-                        <Insets top="2.0" />
-                     </BorderPane.margin>
-                  </Label>
+                  <HBox>
+                     <children>
+                        <Label fx:id="laMemoryPath" text="memory path" BorderPane.alignment="TOP_LEFT">
+                           <BorderPane.margin>
+                              <Insets top="2.0" />
+                           </BorderPane.margin>
+                           <HBox.margin>
+                              <Insets top="3.0" />
+                           </HBox.margin>
+                        </Label>
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Label fx:id="laFilesPath" text="files path">
+                           <HBox.margin>
+                              <Insets top="3.0" />
+                           </HBox.margin></Label>
+                     </children>
+                  </HBox>
                </bottom>
                <VBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

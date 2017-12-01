@@ -44,7 +44,7 @@ public class ExportTool {
 
 		ConsoleUtil.log("Program starts...\n\texport path = " + exportPath + "\n\tonly database = " + onlyDatabase);
 
-		File path = new File(exportPath);
+		File path = new File(exportPath, "memdb");
 		final MemoryWriter memory = new MemoryWriter(path);
 
 		TextWriter writer = (onlyDatabase ? null : new TextWriter(exportPath));

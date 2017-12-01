@@ -58,6 +58,9 @@ public class MemoryIndexer {
 					Document document = new Document();
 
 					document.add(new TextField("ID", doc.getId(), Field.Store.YES));
+					document.add(new TextField("FOLDER", doc.getFolder(), Field.Store.YES));
+					document.add(new TextField("ERW", doc.getErw(), Field.Store.YES));
+
 					String artShort = doc.getArt();
 					String artLong = doc.getArtLong();
 					if (null != artLong) {

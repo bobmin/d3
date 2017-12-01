@@ -1,10 +1,6 @@
 package bob.d3.finder;
 
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Übersetzt eine Suchanfrage in eine passende SQL-Abfrage.
@@ -12,49 +8,14 @@ import java.util.regex.Pattern;
  * @author maik@btmx.net
  *
  */
-public class SqlQuery {
+public class SqlQuery extends AbstractQuery {
 
 	static final String START = "SELECT * FROM document INNER JOIN property ON doc_id = prop_doc_id";
 
 	static final String TAIL = "LIMIT 0, 100";
 
-	private List<String> idValues = null;
-
-	private List<String> extValues = null;
-
-	private String knrValue = null;
-
-	private String lnrValue = null;
-
 	public SqlQuery(final String input) {
-		Objects.requireNonNull(input);
-		if (-1 < input.indexOf("id = ")) {
-			idValues = new LinkedList<>();
-			idValues.addAll(lookFor(input, "id = ([A-Z0-9]+)"));
-		}
-		if (-1 < input.indexOf("ext = ")) {
-			extValues = new LinkedList<>();
-			extValues.addAll(lookFor(input, "ext = ([A-Z]+)"));
-		}
-		if (-1 < input.indexOf("knr = ")) {
-			final List<String> values = lookFor(input, "knr = ([0-9]+)");
-			knrValue = (0 == values.size() ? null : values.get(0));
-		}
-		if (-1 < input.indexOf("lnr = ")) {
-			final List<String> values = lookFor(input, "lnr = ([0-9]+)");
-			lnrValue = (0 == values.size() ? null : values.get(0));
-		}
-	}
-
-	private List<String> lookFor(String input, String token) {
-		List<String> x = new LinkedList<>();
-		Pattern p = Pattern.compile(token);
-		Matcher m = p.matcher(input);
-		while (m.find()) {
-			final String value = m.group(1);
-			x.add(value);
-		}
-		return x;
+		super(input);
 	}
 
 	public String getCommand() {
@@ -105,12 +66,6 @@ public class SqlQuery {
 			sb.append(" ");
 		}
 		return (null == value ? 0 : 1);
-	}
-
-	@Override
-	public String toString() {
-		return "SqlGenerator [idValues=" + idValues + ", extValues=" + extValues + ", knrValue=" + knrValue
-				+ ", lnrValue=" + lnrValue + "]";
 	}
 
 }

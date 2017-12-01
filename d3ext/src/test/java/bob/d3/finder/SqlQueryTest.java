@@ -41,10 +41,10 @@ public class SqlQueryTest {
 			System.out.println("value: \"" + value + "\"\n\t\"" + expected + "\"");
 			Assert.assertTrue(expected.contains("SELECT"));
 			Assert.assertTrue(expected.contains("FROM"));
-			SqlQuery generator = new SqlQuery(value);
-			final String command = generator.getCommand();
+			SqlQuery query = new SqlQuery(value);
+			final String command = query.getCommand();
 			System.out.println("\t\"" + command + "\"");
-			System.out.println("\t" + generator);
+			System.out.println("\t" + query);
 			Assert.assertEquals(expected, command);
 		}
 	}
