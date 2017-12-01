@@ -1,5 +1,11 @@
 # d3
 
+```
+-Djava.util.logging.config.file=C:\d3\d3ext\logging.properties
+```
+
+Run Configuration/Common/Output File: `C:\Temp\d3ext\Xyz_${current_date}.log`
+
 ## ExportTool
 
 ```
