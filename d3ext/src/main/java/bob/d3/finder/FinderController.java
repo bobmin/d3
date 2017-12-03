@@ -5,30 +5,16 @@
 package bob.d3.finder;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
-import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
-import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.index.DirectoryReader;
-import org.apache.lucene.queryparser.classic.ParseException;
-import org.apache.lucene.queryparser.classic.QueryParser;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.FSDirectory;
-
 import bob.d3.D3ExException.SourceException;
 import bob.d3.export.DocumentFolder;
+import bob.d3.finder.AbstractSearcher.CacheItem;
 import javafx.application.HostServices;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -54,7 +40,7 @@ public class FinderController implements Initializable {
 
 	private HostServices hostServices = null;
 
-	private Map<String, CacheItem> cache = new HashMap<>();
+	private Map<String, AbstractSearcher.CacheItem> cache = new HashMap<>();
 
 	private DocumentFolder src = null;
 
@@ -74,6 +60,9 @@ public class FinderController implements Initializable {
 	private Label laMemoryPath;
 
 	@FXML
+	private Label laMatch;
+
+	@FXML
 	private Label laFilesPath;
 
 	@FXML
@@ -84,6 +73,9 @@ public class FinderController implements Initializable {
 
 	@FXML
 	private CheckMenuItem cbShowQuery;
+
+	@FXML
+	private CheckMenuItem cbClearBefore;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -98,67 +90,39 @@ public class FinderController implements Initializable {
 
 	@FXML
 	void startSearch(ActionEvent event) {
+		if (cbClearBefore.isSelected()) {
+			taOutput.clear();
+		}
+
 		String input = tfInput.getText();
 
 		if (cbIndexSearcher.isSelected()) {
 			taOutput.appendText("Suche über INDEX...\n");
-			searchInIndex(input);
+			searchIn(new IndexSearcher(memoryPath), new IndexQuery(input));
 		}
 
 		if (cbMemorySercher.isSelected()) {
 			taOutput.appendText("Suche über MEMORY...\n");
-			searchInMemory(input);
+			searchIn(new MemorySearcher(memoryPath), new SqlQuery(input));
 		}
 
 	}
 
-	private void searchInIndex(String input) {
-		IndexQuery indexQuery = new IndexQuery(input);
-		String cmd = indexQuery.getCommand();
-		publishQuery(cmd);
-
-		Analyzer analyzer = new StandardAnalyzer();
-
-		final Path path = FileSystems.getDefault().getPath(memoryPath.getAbsolutePath(), "memidx");
-
-		Directory index = null;
-		DirectoryReader ireader = null;
-		IndexSearcher isearcher = null;
-
-		try {
-			index = FSDirectory.open(path);
-
-			ireader = DirectoryReader.open(index);
-			isearcher = new IndexSearcher(ireader);
-			// https://stackoverflow.com/questions/2005084/how-to-specify-two-fields-in-lucene-queryparser
-			QueryParser parser = new QueryParser("ID", analyzer);
-			Query query = parser.parse(cmd);
-
-			// QueryBuilder builder = new QueryBuilder(analyzer);
-			// Query knr = builder.createBooleanQuery("Kunden-Nr.", "11016");
-			ScoreDoc[] hits = isearcher.search(query, 1000).scoreDocs;
-			for (int i = 0; i < hits.length; i++) {
-				Document hitDoc = isearcher.doc(hits[i].doc);
-				publishItem(hitDoc.get("ID"), hitDoc.get("FOLDER"), hitDoc.get("ERW"));
-			}
-		} catch (IOException | ParseException e) {
-			e.printStackTrace();
-		} finally {
-			if (null != ireader) {
-				try {
-					ireader.close();
-				} catch (IOException ex) {
-					// ignored
-				}
-			}
-			if (null != index) {
-				try {
-					index.close();
-				} catch (IOException ex) {
-					// ignored
-				}
+	private void searchIn(final AbstractSearcher searcher, final AbstractQuery query) {
+		cache.clear();
+		// Abfrage aufbauen
+		final String cmd = query.getCommand();
+		if (null == cmd) {
+			publishLine("Abfrage unklar. Schreibweise korrekt?");
+		} else {
+			publishQuery(cmd);
+			// Suche ausführen
+			List<CacheItem> result = searcher.lookFor(cmd);
+			for (CacheItem x : result) {
+				publishItem(x.id, x);
 			}
 		}
+		laMatch.setText(cache.size() + " Treffer");
 	}
 
 	/**
@@ -194,40 +158,18 @@ public class FinderController implements Initializable {
 	 * @param erw
 	 *            die Dateierweiterung vom Dokument
 	 */
-	private void publishItem(String id, String folder, String erw) {
-		CacheItem item = new CacheItem();
-		item.folder = folder;
-		item.erw = erw;
+	private CacheItem publishItem(String id, CacheItem item) {
 		// Anzeige
-		publishLine(item.format(id));
+		StringBuffer sb = new StringBuffer(item.format(id));
+		for (String key : item.porps.keySet()) {
+			sb.append(", ").append(key).append(":\"").append(item.porps.get(key)).append("\"");
+		}
+		publishLine(sb.toString());
 		// Cache
 		if (!cache.containsKey(id)) {
 			cache.put(id, item);
 		}
-	}
-
-	private void searchInMemory(final String input) {
-		SqlQuery gen = new SqlQuery(input);
-		String sql = gen.getCommand();
-		publishQuery(sql);
-
-		MemoryReader memory = null;
-		try {
-			final File memdb = new File(memoryPath, "memdb");
-			memory = new MemoryReader(memdb);
-			if (memory.open(sql)) {
-				do {
-					bob.d3.Document doc = memory.getDoc();
-					taOutput.appendText(doc + "\n");
-				} while (memory.next());
-			}
-		} catch (ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
-		} finally {
-			if (null != memory) {
-				memory.close();
-			}
-		}
+		return item;
 	}
 
 	public void setMemoryPath(File path) {
@@ -263,17 +205,6 @@ public class FinderController implements Initializable {
 		tfInput.setDisable(b);
 		btnSearch.setDisable(b);
 		taOutput.setDisable(b);
-
-	}
-
-	private class CacheItem {
-
-		String folder;
-		String erw;
-
-		public String format(String id) {
-			return String.format("%s, %s, %s", id, folder, erw);
-		}
 
 	}
 
@@ -333,6 +264,13 @@ public class FinderController implements Initializable {
 	@FXML
 	void clearOutput(ActionEvent event) {
 		taOutput.clear();
+	}
+
+	@FXML
+	void startDirectSearch(ActionEvent event) {
+		String selectedText = taOutput.getSelectedText().trim();
+		tfInput.setText("#direkt " + selectedText);
+		btnSearch.fire();
 	}
 
 }

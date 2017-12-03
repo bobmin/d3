@@ -8,15 +8,15 @@ import java.util.logging.Logger;
 import bob.d3.D3ExException.ResourceException;
 import bob.d3.ResourceFile;
 
-public class MemoryArtsCache {
+public class MemoryArts {
 
-	private static final Logger LOG = Logger.getLogger(MemoryArtsCache.class.getName());
+	private static final Logger LOG = Logger.getLogger(MemoryArts.class.getName());
 
 	private final Map<String, String> data = new LinkedHashMap<>();
 
-	private static MemoryArtsCache _self = null;
+	private static MemoryArts _self = null;
 
-	public static MemoryArtsCache getDefault() {
+	public static MemoryArts getDefault() {
 		if (null == _self) {
 			final Map<String, String> x = new LinkedHashMap<>();
 			try {
@@ -30,12 +30,12 @@ public class MemoryArtsCache {
 				LOG.log(Level.SEVERE, "data file corrupt", ex);
 			}
 			LOG.info("data loaded: " + x);
-			_self = new MemoryArtsCache(x);
+			_self = new MemoryArts(x);
 		}
 		return _self;
 	}
 
-	private MemoryArtsCache(Map<String, String> values) {
+	private MemoryArts(Map<String, String> values) {
 		this.data.putAll(values);
 	}
 

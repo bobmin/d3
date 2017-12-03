@@ -18,7 +18,7 @@ public class MemoryReader {
 
 	private static final Logger LOG = Logger.getLogger(MemoryReader.class.getName());
 
-	private static final MemoryArtsCache ARTS = MemoryArtsCache.getDefault();
+	private static final MemoryArts ARTS = MemoryArts.getDefault();
 
 	private final ConnectionDriver driver;
 

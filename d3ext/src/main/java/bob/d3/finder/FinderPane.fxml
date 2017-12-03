@@ -18,7 +18,7 @@
                         <CheckMenuItem fx:id="cbIndexSearcher" mnemonicParsing="false" selected="true" text="Index durchsuchen" />
                         <CheckMenuItem fx:id="cbMemorySercher" mnemonicParsing="false" text="Datenbank durchsuchen" />
                         <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" onAction="#printCacheItems" text="Zwischenspeicher ausgeben" />
+                        <MenuItem mnemonicParsing="false" onAction="#startDirectSearch" text="Direktsuche starten" />
                         <MenuItem mnemonicParsing="false" onAction="#lookForFile" text="Datei öffnen" />
                         <SeparatorMenuItem mnemonicParsing="false" />
                     <MenuItem mnemonicParsing="false" text="Programm beenden" />
@@ -33,7 +33,9 @@
                   <Menu mnemonicParsing="false" text="Ansicht">
                     <items>
                         <CheckMenuItem fx:id="cbShowQuery" mnemonicParsing="false" text="Abfragen anzeigen" />
-                        <MenuItem mnemonicParsing="false" onAction="#clearOutput" text="Ausgabe löschen" />
+                        <MenuItem mnemonicParsing="false" onAction="#printCacheItems" text="Zwischenspeicher ausgeben" />
+                        <CheckMenuItem fx:id="cbClearBefore" mnemonicParsing="false" selected="true" text="Ausgabe vor Suche löschen" />
+                        <MenuItem mnemonicParsing="false" onAction="#clearOutput" text="Ausgabe jetzt löschen" />
                     </items>
                   </Menu>
                 <Menu mnemonicParsing="false" text="Hilfe">
@@ -79,6 +81,12 @@
                            <BorderPane.margin>
                               <Insets top="2.0" />
                            </BorderPane.margin>
+                           <HBox.margin>
+                              <Insets top="3.0" />
+                           </HBox.margin>
+                        </Label>
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Label fx:id="laMatch" text="0 Treffer">
                            <HBox.margin>
                               <Insets top="3.0" />
                            </HBox.margin>

@@ -7,6 +7,7 @@ import java.util.List;
  * 
  * @author maikboettcher
  *
+ * @see https://lucene.apache.org/core/7_1_0//queryparser/org/apache/lucene/queryparser/classic/package-summary.html
  * @see https://lucene.apache.org/core/2_9_4/queryparsersyntax.html
  *
  */
@@ -19,28 +20,34 @@ public class IndexQuery extends AbstractQuery {
 	@Override
 	public String getCommand() {
 		StringBuffer sb = new StringBuffer();
-		int count = 0;
-		count += append(sb, "Kunden-Nr.", knrValue, count);
-		return sb.toString();
+		if (empty) {
+			sb.append("P*");
+		} else if (null != direct) {
+			sb.append(direct);
+		} else {
+			int count = 0;
+			count += append(sb, "ID", idValues, count);
+			count += append(sb, "Kunden-Nr.", knrValue, count);
+			// mod_date:[20020101 TO 20030101]
+		}
+		return (0 == sb.length() ? null : sb.toString());
 	}
 
 	private int append(StringBuffer sb, String name, List<String> list, int count) {
 		if (null != list) {
-			if (0 == count) {
-				sb.append("WHERE ");
-			} else {
-				sb.append("AND ");
+			if (0 != count) {
+				sb.append(" ");
 			}
 			sb.append(name);
-			sb.append(" IN (");
+			sb.append(":(");
 			for (int idx = 0; idx < list.size(); idx++) {
-				final String ext = list.get(idx);
+				final String x = list.get(idx);
 				if (0 < idx) {
-					sb.append(", ");
+					sb.append(",");
 				}
-				sb.append("'").append(ext).append("'");
+				sb.append(x);
 			}
-			sb.append(") ");
+			sb.append(")");
 		}
 		return (null == list ? 0 : list.size());
 	}

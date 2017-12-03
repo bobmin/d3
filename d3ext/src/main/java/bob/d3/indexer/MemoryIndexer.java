@@ -5,12 +5,15 @@ import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
@@ -49,6 +52,8 @@ public class MemoryIndexer {
 
 		IndexWriter writer = new IndexWriter(index, config);
 
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+
 		try {
 			final String sql = "SELECT TOP 100 * FROM document";
 			if (reader.open(sql)) {
@@ -57,26 +62,34 @@ public class MemoryIndexer {
 
 					Document document = new Document();
 
+					// Datei
 					document.add(new TextField("ID", doc.getId(), Field.Store.YES));
-					document.add(new TextField("FOLDER", doc.getFolder(), Field.Store.YES));
-					document.add(new TextField("ERW", doc.getErw(), Field.Store.YES));
+					document.add(new StringField("FOLDER", doc.getFolder(), Field.Store.YES));
+					document.add(new StringField("ERW", doc.getErw().trim().toLowerCase(), Field.Store.YES));
 
+					// Art
 					String artShort = doc.getArt();
-					String artLong = doc.getArtLong();
-					if (null != artLong) {
-						document.add(new TextField("ART", String.format("%s [%s]", artLong, artShort), Field.Store.NO));
-					} else {
-						document.add(new TextField("ART", artShort, Field.Store.NO));
-					}
+					document.add(new StringField("ART", artShort, Field.Store.YES));
 
+					// Datum
+					Date einbring = doc.getEinbring();
+					// document.add(new LongPoint("EINBRING_YYYYMMDD",
+					// Long.parseLong(sdf.format(einbring))));
+					document.add(new TextField("EINBRING", sdf.format(einbring), Field.Store.YES));
+					
+					// Eigenschaften
 					List<Property> props = doc.getProps();
 					for (Property p : props) {
 						String value = p.getValue();
 						if (null != value && 0 < value.trim().length()) {
-							document.add(new TextField(p.getColumnName(), value, Field.Store.NO));
+							if (value.endsWith(" 00:00:00.0")) {
+								value = value.substring(0, value.length() - 11);
+							}
 							String label = p.getLongtext();
 							if (null != label) {
 								document.add(new TextField(label, value, Field.Store.YES));
+							} else {
+								document.add(new TextField(p.getColumnName(), value, Field.Store.NO));
 							}
 						}
 					}

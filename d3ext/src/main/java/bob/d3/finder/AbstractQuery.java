@@ -2,7 +2,6 @@ package bob.d3.finder;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,6 +14,10 @@ import java.util.regex.Pattern;
  */
 public abstract class AbstractQuery {
 
+	protected boolean empty = false;
+
+	protected String direct = null;
+
 	protected List<String> idValues = null;
 
 	protected List<String> extValues = null;
@@ -24,22 +27,27 @@ public abstract class AbstractQuery {
 	protected String lnrValue = null;
 
 	public AbstractQuery(final String input) {
-		Objects.requireNonNull(input);
-		if (-1 < input.indexOf("id = ")) {
-			idValues = new LinkedList<>();
-			idValues.addAll(lookFor(input, "id = ([A-Z0-9]+)"));
-		}
-		if (-1 < input.indexOf("ext = ")) {
-			extValues = new LinkedList<>();
-			extValues.addAll(lookFor(input, "ext = ([A-Z]+)"));
-		}
-		if (-1 < input.indexOf("knr = ")) {
-			final List<String> values = lookFor(input, "knr = ([0-9]+)");
-			knrValue = (0 == values.size() ? null : values.get(0));
-		}
-		if (-1 < input.indexOf("lnr = ")) {
-			final List<String> values = lookFor(input, "lnr = ([0-9]+)");
-			lnrValue = (0 == values.size() ? null : values.get(0));
+		if (null == input || 0 == input.trim().length()) {
+			empty = true;
+		} else if (input.startsWith("#direkt ")) {
+			direct = input.substring(8);
+		} else {
+			if (-1 < input.indexOf("id = ")) {
+				idValues = new LinkedList<>();
+				idValues.addAll(lookFor(input, "id = ([A-Z0-9]+)"));
+			}
+			if (-1 < input.indexOf("ext = ")) {
+				extValues = new LinkedList<>();
+				extValues.addAll(lookFor(input, "ext = ([A-Z]+)"));
+			}
+			if (-1 < input.indexOf("knr = ")) {
+				final List<String> values = lookFor(input, "knr = ([0-9]+)");
+				knrValue = (0 == values.size() ? null : values.get(0));
+			}
+			if (-1 < input.indexOf("lnr = ")) {
+				final List<String> values = lookFor(input, "lnr = ([0-9]+)");
+				lnrValue = (0 == values.size() ? null : values.get(0));
+			}
 		}
 	}
 
