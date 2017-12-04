@@ -16,6 +16,12 @@ Database will created under `C:\Temp\d3ext\171201\memdb\`.
 
 ## MemoryIndexer
 
+| field | type | example | note |
+| ----- | ---- | ------- | ---- |
+| ID    | TextField | P5730553 | |
+| ERW   | StringField | pdf | lower cases |
+| EINBRING | TextField | 20130321 |
+
 ```
 java -cp d3ext.jar bob.d3.indexer.MemoryIndexer "C:\Temp\d3ext\171201"
 ```
