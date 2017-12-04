@@ -22,6 +22,7 @@ Database will created under `C:\Temp\d3ext\171201\memdb\`.
 | ERW   | StringField | pdf | lower cases |
 | ART | StringField | rech | lower cases; see ```/memory_doc_doku_art.txt``` |
 | EINBRING | TextField | 20130321 |
+| Xyz | TextField | Karl Mustermann & Söhne KG | field names described in ```/memory_prop_longtext.txt``` |
 
 ```
 java -cp d3ext.jar bob.d3.indexer.MemoryIndexer "C:\Temp\d3ext\171201"
