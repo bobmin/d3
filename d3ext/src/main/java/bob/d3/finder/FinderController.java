@@ -119,7 +119,7 @@ public class FinderController implements Initializable {
 			// Suche ausführen
 			List<CacheItem> result = searcher.lookFor(cmd);
 			for (CacheItem x : result) {
-				publishItem(x.id, x);
+				publishItem(x.getId(), x);
 			}
 		}
 		laMatch.setText(cache.size() + " Treffer");
@@ -228,7 +228,7 @@ public class FinderController implements Initializable {
 					taOutput.appendText("Erster Zugriff ins Dateisystem. Bitte warten!\n");
 					src = DocumentFolder.create();
 				}
-				final File f = src.lookFor(id, item.folder, item.erw);
+				final File f = src.lookFor(id, item.getFolder(), item.getErw());
 				if (null != f) {
 					taOutput.appendText(f.getAbsolutePath() + "\n");
 					hostServices.showDocument(f.getAbsolutePath());

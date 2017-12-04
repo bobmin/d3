@@ -26,7 +26,7 @@ public class MemorySearcher extends AbstractSearcher {
 				do {
 					bob.d3.Document doc = memory.getDoc();
 
-					CacheItem item = new CacheItem(doc.getId(), doc.getEinbring(), doc.getFolder(), doc.getErw());
+					CacheItem item = new CacheItem(doc.getId(), doc.getEinbring(), doc.getArt(), doc.getErw());
 					List<Property> memprops = doc.getProps();
 					for (Property p : memprops) {
 						String value = p.getValue();

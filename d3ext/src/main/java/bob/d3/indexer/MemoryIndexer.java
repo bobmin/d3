@@ -30,13 +30,15 @@ public class MemoryIndexer {
 	private static final Logger LOG = Logger.getLogger(MemoryIndexer.class.getName());
 
 	public static void main(String[] args) throws IOException, ClassNotFoundException, SQLException {
-		if (1 != args.length) {
-			System.out.println("usage: java -cp ... bob.d3.indexer.MemoryIndexer <folder>");
+		if (2 != args.length) {
+			System.out.println("usage: java -cp ... bob.d3.indexer.MemoryIndexer <folder> <sql>");
 			System.exit(-1);
 		}
 
 		final String folder = args[0];
-		ConsoleUtil.log("%s starts: %s", MemoryIndexer.class.getSimpleName(), folder);
+		final String sql = args[1];
+		ConsoleUtil.log("%s starts...\n\t%s\n\t%s", MemoryIndexer.class.getSimpleName(), folder, sql);
+
 
 		// Quelle
 		final MemoryReader reader = new MemoryReader(new File(folder, "memdb"));
@@ -55,7 +57,6 @@ public class MemoryIndexer {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 
 		try {
-			final String sql = "SELECT TOP 100 * FROM document";
 			if (reader.open(sql)) {
 				do {
 					bob.d3.Document doc = reader.getDoc();
@@ -64,18 +65,21 @@ public class MemoryIndexer {
 
 					// Datei
 					document.add(new TextField("ID", doc.getId(), Field.Store.YES));
-					document.add(new StringField("FOLDER", doc.getFolder(), Field.Store.YES));
 					document.add(new StringField("ERW", doc.getErw().trim().toLowerCase(), Field.Store.YES));
 
 					// Art
 					String artShort = doc.getArt();
-					document.add(new StringField("ART", artShort, Field.Store.YES));
+					if (null != artShort) {
+						document.add(new StringField("ART", artShort.toLowerCase(), Field.Store.YES));
+					}
 
 					// Datum
 					Date einbring = doc.getEinbring();
 					// document.add(new LongPoint("EINBRING_YYYYMMDD",
 					// Long.parseLong(sdf.format(einbring))));
-					document.add(new TextField("EINBRING", sdf.format(einbring), Field.Store.YES));
+					if (null != einbring) {
+						document.add(new TextField("EINBRING", sdf.format(einbring), Field.Store.YES));
+					}
 					
 					// Eigenschaften
 					List<Property> props = doc.getProps();
@@ -89,12 +93,14 @@ public class MemoryIndexer {
 							if (null != label) {
 								document.add(new TextField(label, value, Field.Store.YES));
 							} else {
-								document.add(new TextField(p.getColumnName(), value, Field.Store.NO));
+								document.add(new TextField(p.getColumnName(), value, Field.Store.YES));
 							}
 						}
 					}
 
-					ConsoleUtil.log("document added: " + writer.addDocument(document));
+					writer.addDocument(document);
+					
+					ConsoleUtil.log("document added: " + document);
 
 				} while (reader.next());
 			}

@@ -5,22 +5,12 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Document {
+public class Document extends AbstractDocument {
 
-	// --- Datenbankspalten --------------
-
-	private final String doku_id;
-	private final Date einbring;
-	private final String dokuart;
 	private final long size_in_byte;
 	private final String logi_verzeichnis;
-	private final String datei_erw;
 	private final int doku_nr;
 	private final Date sterbe;
-
-	// --- ENDE --------------------------
-
-	private final String folder;
 
 	private String artLong = null;
 
@@ -32,52 +22,20 @@ public class Document {
 
 	public Document(String id, Date einbring, String artShort, long size, String dir, String erw, int nr,
 			Date sterbe) {
-		this.doku_id = id;
-		this.einbring = einbring;
-		this.dokuart = artShort;
+		super(id, einbring, artShort, erw);
 		this.size_in_byte = size;
 		this.logi_verzeichnis = dir;
-		this.datei_erw = erw;
 		this.doku_nr = nr;
 		this.sterbe = sterbe;
-		this.folder = computeFolder(id);
-	}
-
-	private String computeFolder(String id) {
-		String x;
-		if (8 == id.length()) {
-			x = id.substring(0, 4);
-		} else if (10 == id.length()) {
-			x = id.substring(0, 6);
-		} else {
-			throw new IllegalArgumentException("format from [id] is unknown: " + id, null);
-		}
-		return x;
-	}
-
-	public String getId() {
-		return doku_id;
 	}
 
 	public Date getEinbring() {
 		return einbring;
 	}
 
+	@Override
 	public String getFolder() {
 		return folder;
-	}
-
-	public String getErw() {
-		return datei_erw;
-	}
-
-	/**
-	 * Liefert das Kürzel von der Dokumentenart.
-	 * 
-	 * @return eine Zeichenkette, niemals <code>null</code>
-	 */
-	public String getArt() {
-		return dokuart;
 	}
 
 	/**
@@ -137,10 +95,10 @@ public class Document {
 				+ ", props=%d, nr=%d, bytes=%d"
 				+ ", sterbe=%s"
 				+ ", dir=%s, erw=%s, path=%s]"
-				, doku_id, einbring, dokuart, artLong
+				, id, einbring, art, artLong
 				, propsSize
 				, doku_nr, size_in_byte, sterbe
-				, logi_verzeichnis, datei_erw
+				, logi_verzeichnis, erw
 				, (null == file ? "null" : file.getAbsolutePath()));
 		// @formatter:on
 	}

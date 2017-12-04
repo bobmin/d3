@@ -4,8 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -48,17 +47,15 @@ public class IndexSearcher extends AbstractSearcher {
 			QueryParser parser = new QueryParser("ID", analyzer);
 			Query query = parser.parse(cmd);
 
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+
 			// QueryBuilder builder = new QueryBuilder(analyzer);
 			// Query knr = builder.createBooleanQuery("Kunden-Nr.", "11016");
 			ScoreDoc[] hits = isearcher.search(query, 1000).scoreDocs;
 			for (int i = 0; i < hits.length; i++) {
 				Document hitDoc = isearcher.doc(hits[i].doc);
 				String einbring = hitDoc.get("EINBRING");
-				Calendar cal = GregorianCalendar.getInstance();
-				cal.set(Calendar.YEAR, Integer.parseInt(einbring.substring(0, 4)));
-				cal.set(Calendar.MONTH, Integer.parseInt(einbring.substring(4, 6)) - 1);
-				cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(einbring.substring(6, 8)));
-				CacheItem item = new CacheItem(hitDoc.get("ID"), cal.getTime(), hitDoc.get("FOLDER"),
+				CacheItem item = new CacheItem(hitDoc.get("ID"), sdf.parse(einbring), hitDoc.get("ART"),
 						hitDoc.get("ERW"));
 				MemoryProps memprops = MemoryProps.getDefault();
 				int size = memprops.getSize();
@@ -71,7 +68,7 @@ public class IndexSearcher extends AbstractSearcher {
 				}
 				x.add(item);
 			}
-		} catch (IOException | ParseException e) {
+		} catch (IOException | ParseException | java.text.ParseException e) {
 			e.printStackTrace();
 		} finally {
 			if (null != ireader) {

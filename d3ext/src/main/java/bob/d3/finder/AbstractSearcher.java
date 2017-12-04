@@ -5,6 +5,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import bob.d3.AbstractDocument;
+
 /**
  * Führt eine Suche aus.
  * 
@@ -15,23 +17,16 @@ public abstract class AbstractSearcher {
 
 	abstract public List<CacheItem> lookFor(String input);
 
-	class CacheItem {
+	class CacheItem extends AbstractDocument {
 
-		final String id;
-		final Date einbring;
-		final String folder;
-		final String erw;
 		final Map<String, String> porps = new LinkedHashMap<>();
 
-		public CacheItem(String id, Date einbring, String folder, String erw) {
-			this.id = id;
-			this.einbring = einbring;
-			this.folder = folder;
-			this.erw = erw;
+		public CacheItem(String id, Date einbring, String art, String erw) {
+			super(id, einbring, art, erw);
 		}
 
 		public String format(String id) {
-			return String.format("%1$s, %2$tY-%2$tm-%2$td, %3$s", id, einbring, erw);
+			return String.format("%1$s, %2$tY-%2$tm-%2$td, %3$s, %4$s", id, einbring, art, erw);
 		}
 
 	}
