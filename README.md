@@ -43,3 +43,5 @@ java -cp d3ext.jar bob.d3.finder.FinderApp "C:\Temp\d3ext\171201"
 | #direkt ERW:(pdf,tif) | no convert; everything after token | ERW:(pdf,tif) |
 | knr = 11016 | a customer | Kunden-Nr.:(11016) |
 | datum > 01.01.2009 datum < 31.12.2009 | a date range for documents | EINBRING:[20090101 TO 20091231] |
+
+see [IndexQueryTest](https://github.com/bobmin/d3/blob/master/d3ext/src/test/java/bob/d3/finder/IndexQueryTest.java) for more examples
