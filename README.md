@@ -20,6 +20,7 @@ Database will created under `C:\Temp\d3ext\171201\memdb\`.
 | ----- | ---- | ------- | ---- |
 | ID    | TextField | P5730553 | |
 | ERW   | StringField | pdf | lower cases |
+| ART | StringField | RECH | lower cases |
 | EINBRING | TextField | 20130321 |
 
 ```
