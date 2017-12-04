@@ -18,13 +18,31 @@ public class IndexQueryTest {
 				"ID:(P0005287)"
 			}, {
 				"id = P0005287 id = P000005287",     
-				"ID:(P0005287,P000005287)"
+				"ID:(P0005287+P000005287)"
 			}, {
 				"knr = 11016", 
-				"Kunden-Nr.:11016"
+				"Kunden-Nr.:(11016)"
 			}, {
-				"#direkt EINBRING:(20171010 TO 20171111)", 
-				"EINBRING:(20171010 TO 20171111)"
+				"knr = 5000 knr = 11016", 
+				"Kunden-Nr.:(5000+11016)"
+			}, {
+				"knr = 5000 ext = TIF knr = 11016", 
+				"ERW:(tif) AND Kunden-Nr.:(5000+11016)"
+			}, {
+				"datum > 01.01.2017", 
+				"EINBRING:[20170101 TO 20991231]"
+			}, {
+				"datum < 11.11.2017", 
+				"EINBRING:[19990101 TO 20171111]"
+			}, {
+				"datum > 10.10.2017 datum < 11.11.2017", 
+				"EINBRING:[20171010 TO 20171111]"
+			}, {
+				"datum > 10.10.2017 datum < 11.11.2017 knr = 11016", 
+				"Kunden-Nr.:(11016) AND EINBRING:[20171010 TO 20171111]"
+			}, {
+				"#direkt EINBRING:[20171010 TO 20171111]", 
+				"EINBRING:[20171010 TO 20171111]"
 			}
 	};
 	// @formatter:on

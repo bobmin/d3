@@ -41,7 +41,7 @@
           </filters>
           <transformers>
             <transformer>
-              <mainClass>bob.d3.d3ext.D3ExTool</mainClass>
+              <mainClass>bob.d3.finder.FinderApp</mainClass>
             </transformer>
           </transformers>
         </configuration>

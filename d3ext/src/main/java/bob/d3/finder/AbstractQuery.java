@@ -1,5 +1,6 @@
 package bob.d3.finder;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -22,9 +23,13 @@ public abstract class AbstractQuery {
 
 	protected List<String> extValues = null;
 
-	protected String knrValue = null;
+	protected List<String> knrValues = null;
 
-	protected String lnrValue = null;
+	protected List<String> lnrValues = null;
+
+	protected int[] dateStarts = null;
+
+	protected int[] dateEnds = null;
 
 	public AbstractQuery(final String input) {
 		if (null == input || 0 == input.trim().length()) {
@@ -34,24 +39,28 @@ public abstract class AbstractQuery {
 		} else {
 			if (-1 < input.indexOf("id = ")) {
 				idValues = new LinkedList<>();
-				idValues.addAll(lookFor(input, "id = ([A-Z0-9]+)"));
+				idValues.addAll(lookForList(input, "id = ([A-Z0-9]+)"));
 			}
 			if (-1 < input.indexOf("ext = ")) {
 				extValues = new LinkedList<>();
-				extValues.addAll(lookFor(input, "ext = ([A-Z]+)"));
+				extValues.addAll(lookForList(input, "ext = ([a-zA-Z]+)"));
 			}
 			if (-1 < input.indexOf("knr = ")) {
-				final List<String> values = lookFor(input, "knr = ([0-9]+)");
-				knrValue = (0 == values.size() ? null : values.get(0));
+				knrValues = new LinkedList<>();
+				knrValues.addAll(lookForList(input, "knr = ([0-9]+)"));
 			}
 			if (-1 < input.indexOf("lnr = ")) {
-				final List<String> values = lookFor(input, "lnr = ([0-9]+)");
-				lnrValue = (0 == values.size() ? null : values.get(0));
+				lnrValues = new LinkedList<>();
+				lnrValues.addAll(lookForList(input, "lnr = ([0-9]+)"));
+			}
+			if (-1 < input.indexOf("datum > ") || -1 < input.indexOf("datum < ")) {
+				dateStarts = lookForArray(input, "datum > ([0-9][0-9]).([0-9][0-9]).([0-9][0-9][0-9][0-9])");
+				dateEnds = lookForArray(input, "datum < ([0-9][0-9]).([0-9][0-9]).([0-9][0-9][0-9][0-9])");
 			}
 		}
 	}
 
-	private List<String> lookFor(String input, String token) {
+	private List<String> lookForList(String input, String token) {
 		List<String> x = new LinkedList<>();
 		Pattern p = Pattern.compile(token);
 		Matcher m = p.matcher(input);
@@ -62,12 +71,41 @@ public abstract class AbstractQuery {
 		return x;
 	}
 
+	private int[] lookForArray(String input, String token) {
+		int[] x = null;
+		Pattern p = Pattern.compile(token);
+		Matcher m = p.matcher(input);
+		while (m.find()) {
+			try {
+				int a = Integer.parseInt(m.group(1));
+				int b = Integer.parseInt(m.group(2));
+				int c = Integer.parseInt(m.group(3));
+				x = new int[] { a, b, c };
+			} catch (NumberFormatException ex) {
+				ex.printStackTrace();
+			}
+		}
+		return x;
+	}
+
 	abstract public String getCommand();
 
 	@Override
 	public String toString() {
-		return "AbstractQuery [idValues=" + idValues + ", extValues=" + extValues + ", knrValue=" + knrValue
-				+ ", lnrValue=" + lnrValue + "]";
+		String data;
+		if (null == direct) {
+			// @formatter:off
+			data = ", idValues=" + idValues 
+					+ ", extValues=" + extValues 
+					+ ", knrValues=" + knrValues
+					+ ", lnrValues=" + lnrValues
+					+ ", dateStarts=" + Arrays.toString(dateStarts)
+					+ ", dateEnds=" + Arrays.toString(dateEnds);
+			// @formatter:on
+		} else {
+			data = ", direct=" + direct;
+		}
+		return "AbstractQuery [emtpy=" + empty + data + "]";
 	}
 
 }

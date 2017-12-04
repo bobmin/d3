@@ -18,21 +18,22 @@ public class SqlQuery extends AbstractQuery {
 		super(input);
 	}
 
+	@Override
 	public String getCommand() {
 		StringBuffer sb = new StringBuffer(START);
 		sb.append(" ");
 
 		int count = 0;
-		count += append(sb, "doc_id", idValues, count);
-		count += append(sb, "doc_ext", extValues, count);
-		count += append(sb, "Kunden-Nr.", knrValue, count);
-		count += append(sb, "Lieferanten-Nr.", lnrValue, count);
+		count += appendList(sb, "doc_id", idValues, count);
+		count += appendList(sb, "doc_ext", extValues, count);
+		count += appendProp(sb, "Kunden-Nr.", knrValues, count);
+		count += appendProp(sb, "Lieferanten-Nr.", lnrValues, count);
 
 		sb.append(TAIL);
 		return sb.toString();
 	}
 
-	private int append(StringBuffer sb, String name, List<String> list, int count) {
+	private int appendList(StringBuffer sb, String name, List<String> list, int count) {
 		if (null != list) {
 			if (0 == count) {
 				sb.append("WHERE ");
@@ -53,19 +54,23 @@ public class SqlQuery extends AbstractQuery {
 		return (null == list ? 0 : list.size());
 	}
 
-	private int append(StringBuffer sb, String name, String value, int count) {
-		if (null != value) {
-			if (0 == count) {
-				sb.append("WHERE ");
-			} else {
-				sb.append("AND ");
+	private int appendProp(StringBuffer sb, String name, List<String> values, int count) {
+		int match = count;
+		if (null != values && 0 < values.size()) {
+			for (String v : values) {
+				if (0 == match) {
+					sb.append("WHERE ");
+				} else {
+					sb.append("AND ");
+				}
+				sb.append("prop_longtext = '").append(name).append("'");
+				sb.append(" AND ");
+				sb.append("prop_value = '").append(v).append("'");
+				sb.append(" ");
 			}
-			sb.append("prop_longtext = '").append(name).append("'");
-			sb.append(" AND ");
-			sb.append("prop_value = '").append(value).append("'");
-			sb.append(" ");
+			match++;
 		}
-		return (null == value ? 0 : 1);
+		return (count - match);
 	}
 
 }
