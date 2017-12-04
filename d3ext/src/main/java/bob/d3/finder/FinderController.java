@@ -16,6 +16,9 @@ import bob.d3.D3ExException.SourceException;
 import bob.d3.export.DocumentFolder;
 import bob.d3.finder.AbstractSearcher.CacheItem;
 import javafx.application.HostServices;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -43,6 +46,9 @@ public class FinderController implements Initializable {
 	private Map<String, AbstractSearcher.CacheItem> cache = new HashMap<>();
 
 	private DocumentFolder src = null;
+
+	/** Anzahl der Treffer (im Zwischenspeicher) */
+	private IntegerProperty matches = new SimpleIntegerProperty(0);
 
 	@FXML
 	private MenuBar menuBar;
@@ -79,6 +85,7 @@ public class FinderController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		laMatch.textProperty().bind(Bindings.concat(matches).concat(" Treffer"));
 	}
 
 	@FXML
@@ -122,7 +129,7 @@ public class FinderController implements Initializable {
 				publishItem(x.getId(), x);
 			}
 		}
-		laMatch.setText(cache.size() + " Treffer");
+		matches.set(cache.size());
 	}
 
 	/**

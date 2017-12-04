@@ -27,6 +27,8 @@ public abstract class AbstractQuery {
 
 	protected List<String> lnrValues = null;
 
+	protected List<String> artValues = null;
+
 	protected int[] dateStarts = null;
 
 	protected int[] dateEnds = null;
@@ -52,6 +54,10 @@ public abstract class AbstractQuery {
 			if (-1 < input.indexOf("lnr = ")) {
 				lnrValues = new LinkedList<>();
 				lnrValues.addAll(lookForList(input, "lnr = ([0-9]+)"));
+			}
+			if (-1 < input.indexOf("art = ")) {
+				artValues = new LinkedList<>();
+				artValues.addAll(lookForList(input, "art = ([a-zA-Z]+)"));
 			}
 			if (-1 < input.indexOf("datum > ") || -1 < input.indexOf("datum < ")) {
 				dateStarts = lookForArray(input, "datum > ([0-9][0-9]).([0-9][0-9]).([0-9][0-9][0-9][0-9])");

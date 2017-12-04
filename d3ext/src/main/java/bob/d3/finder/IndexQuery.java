@@ -29,6 +29,8 @@ public class IndexQuery extends AbstractQuery {
 			count += append(sb, "ID", idValues, false, count);
 			count += append(sb, "ERW", extValues, true, count);
 			count += append(sb, "Kunden-Nr.", knrValues, false, count);
+			count += append(sb, "Lieferanten-Nr.", lnrValues, false, count);
+			count += append(sb, "ART", artValues, true, count);
 			count += append(sb, dateStarts, dateEnds, count);
 		}
 		return (0 == sb.length() ? null : sb.toString());
