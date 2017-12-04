@@ -33,3 +33,11 @@ Database from `C:\Temp\d3ext\171201\memdb\` will readed and the Index will wrote
 ```
 java -cp d3ext.jar bob.d3.finder.FinderApp "C:\Temp\d3ext\171201"
 ```
+
+### IndexSearcher
+
+| input | note | query |
+| ----- | ---- | ----- | 
+| #direkt ERW:(pdf,tif) | no convert; everything after token | ERW:(pdf,tif) |
+| knr = 11016 | a customer | Kunden-Nr.:(11016) |
+| datum > 01.01.2009 datum < 31.12.2009 | a date range for documents | EINBRING:[20090101 TO 20091231] |
