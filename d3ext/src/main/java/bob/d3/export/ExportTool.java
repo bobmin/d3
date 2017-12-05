@@ -1,6 +1,7 @@
 package bob.d3.export;
 
 import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Logger;
 
@@ -33,7 +34,7 @@ public class ExportTool {
 	 * @throws SQLException
 	 * @throws ClassNotFoundException
 	 */
-	public static void main(String[] args) throws D3ExException, ClassNotFoundException, SQLException {
+	public static void main(String[] args) throws D3ExException, ClassNotFoundException, SQLException, IOException {
 		if (!(1 == args.length || 2 == args.length)) {
 			System.out.println("usage: java -cp ... bob.d3.export.ExportTool <path> [--onlyDatabase]");
 			System.exit(-1);

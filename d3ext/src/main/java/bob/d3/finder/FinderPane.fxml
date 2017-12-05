@@ -20,6 +20,7 @@
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem mnemonicParsing="false" onAction="#startDirectSearch" text="Direktsuche starten" />
                         <MenuItem mnemonicParsing="false" onAction="#lookForFile" text="Datei öffnen" />
+                        <MenuItem mnemonicParsing="false" onAction="#copyFiles" text="Dateien kopieren" />
                         <SeparatorMenuItem mnemonicParsing="false" />
                     <MenuItem mnemonicParsing="false" text="Programm beenden" />
                   </items>

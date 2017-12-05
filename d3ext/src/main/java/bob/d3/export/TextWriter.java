@@ -2,15 +2,12 @@ package bob.d3.export;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Objects;
 import java.util.logging.Logger;
 
+import bob.d3.CopyUtil;
 import bob.d3.D3ExException;
 import bob.d3.D3ExException.ConfigException;
 import bob.d3.D3ExException.WriterException;
@@ -34,7 +31,7 @@ public class TextWriter {
 		LOG.info("path assigned: " + path);
 	}
 
-	public void pull(final Document doc) throws WriterException {
+	public void pull(final Document doc) throws WriterException, IOException {
 		File f = new File(root, doc.getFolder());
 		f.mkdirs();
 		writeTextfile(f, doc);
@@ -108,38 +105,9 @@ public class TextWriter {
 		writer.newLine();
 	}
 
-	private void copyAttachment(final File folder, final Document doc) throws WriterException {
-		String id = doc.getId();
-		InputStream in = null;
-		OutputStream out = null;
-		try {
-			in = new FileInputStream(doc.getFile());
-			File f2 = new File(folder, doc.getId() + "." + doc.getErw());
-			out = new FileOutputStream(f2);
-			final byte[] buf = new byte[1024];
-			int len;
-			while ((len = in.read(buf)) > 0) {
-				out.write(buf, 0, len);
-			}
-		} catch (IOException ex) {
-			throw new D3ExException.WriterException("cannot copy attachment for " + id, ex);
-		} finally {
-			if (null != out) {
-				try {
-					out.close();
-				} catch (IOException ex) {
-					LOG.warning("[out] not closable: " + ex.getMessage());
-				}
-			}
-			if (null != in) {
-				try {
-					in.close();
-				} catch (IOException ex) {
-					LOG.warning("[in] not closable: " + ex.getMessage());
-				}
-			}
-		}
-
+	private void copyAttachment(final File folder, final Document doc) throws IOException {
+		final File dst = new File(folder, doc.getId() + "." + doc.getErw());
+		new CopyUtil().copy(doc.getFile(), dst);
 	}
 
 }

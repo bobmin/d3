@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
+import bob.d3.CopyUtil;
 import bob.d3.D3ExException.SourceException;
 import bob.d3.export.DocumentFolder;
 import bob.d3.finder.AbstractSearcher.CacheItem;
@@ -32,6 +33,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.Stage;
 
 public class FinderController implements Initializable {
 
@@ -42,6 +45,8 @@ public class FinderController implements Initializable {
 	private File filesPath = null;
 
 	private HostServices hostServices = null;
+
+	private Stage stage = null;
 
 	private Map<String, AbstractSearcher.CacheItem> cache = new HashMap<>();
 
@@ -278,6 +283,84 @@ public class FinderController implements Initializable {
 		String selectedText = taOutput.getSelectedText().trim();
 		tfInput.setText("#direkt " + selectedText);
 		btnSearch.fire();
+	}
+
+	@FXML
+	void copyFiles(ActionEvent event) {
+		if (0 == cache.size()) {
+			publishLine("Keine Treffer zum Kopieren. Suche erfolgreich beendet?");
+			return;
+		}
+
+		DirectoryChooser chooser = new DirectoryChooser();
+		chooser.setTitle("Zielordner wählen");
+		chooser.setInitialDirectory(memoryPath);
+		final File targetFolder = chooser.showDialog(stage);
+		if (null != targetFolder) {
+			setDisable(true);
+			new Thread(new FileCopier(targetFolder)).start();
+		}
+	}
+
+	/**
+	 * @see https://stackoverflow.com/questions/27832347/javafx-swingworker-equivalent#27835238
+	 */
+	private class FileCopier extends Task<String> {
+
+		private final CopyUtil util = new CopyUtil();
+
+		private final File targetFolder;
+
+		public FileCopier(final File targetFolder) {
+			this.targetFolder = targetFolder;
+		}
+
+		@Override
+		protected String call() throws Exception {
+			try {
+				if (null == src) {
+					taOutput.appendText("Erster Zugriff ins Dateisystem. Bitte warten!\n");
+					src = DocumentFolder.create();
+				}
+
+				for (String id : cache.keySet()) {
+					CacheItem item = cache.get(id);
+
+					final File f = src.lookFor(id, item.getFolder(), item.getErw());
+
+					if (null != f) {
+						final String art = item.getArt();
+						final String erw = item.getErw();
+						final String dstName;
+						if (null != art && null != erw) {
+							dstName = id + "_" + item.getArt().toUpperCase() + "." + item.getErw().toUpperCase();
+						} else {
+							dstName = id + "_" + f.getName();
+						}
+						final File dst = new File(targetFolder, dstName);
+						if (!dst.exists()) {
+							util.copy(f, dst);
+							publishLine("Datei " + f.getAbsolutePath() + " kopiert.");
+						} else {
+							publishLine("Datei " + dst.getName() + " nicht kopiert. Existiert schon?.");
+						}
+					} else {
+						publishLine("Keine Datei mit ID gefunden.");
+					}
+
+				}
+
+				setDisable(false);
+			} catch (SourceException ex) {
+				ex.printStackTrace();
+			}
+			return null;
+		}
+
+	}
+
+	public void setStage(Stage stage) {
+		this.stage = stage;
 	}
 
 }

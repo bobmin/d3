@@ -33,8 +33,10 @@ public class FinderApp extends Application {
 		ctrl.setMemoryPath(new File(memoryPath));
 		ctrl.setFilesPath(new File(filesPath));
 		ctrl.setHostService(getHostServices());
+		ctrl.setStage(primaryStage);
 
 		Scene scene = new Scene(pane);
+
 
 		primaryStage.setScene(scene);
 		primaryStage.setTitle("Document Finder");
