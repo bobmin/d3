@@ -21,7 +21,7 @@ public class FinderApp extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws IOException {
-		URL url = getClass().getResource("FinderPane.fxml");
+		URL url = getClass().getResource("/FinderPane.fxml");
 		FXMLLoader loader = new FXMLLoader(url);
 		AnchorPane pane = loader.load();
 
