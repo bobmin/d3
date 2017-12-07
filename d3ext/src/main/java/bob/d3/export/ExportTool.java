@@ -36,12 +36,12 @@ public class ExportTool {
 	 */
 	public static void main(String[] args) throws D3ExException, ClassNotFoundException, SQLException, IOException {
 		if (!(1 == args.length || 2 == args.length)) {
-			System.out.println("usage: java -cp ... bob.d3.export.ExportTool <path> [--onlyDatabase]");
+			System.out.println("usage: java -cp ... bob.d3.export.ExportTool <exportPath> [<filesPath>]");
 			System.exit(-1);
 		}
 
 		final String exportPath = args[0];
-		final boolean onlyDatabase = (1 < args.length ? "--onlyDatabase".equals(args[1]) : false);
+		final boolean onlyDatabase = (1 == args.length);
 
 		ConsoleUtil.log("Program starts...\n\texport path = " + exportPath + "\n\tonly database = " + onlyDatabase);
 
@@ -49,7 +49,7 @@ public class ExportTool {
 		final MemoryWriter memory = new MemoryWriter(path);
 
 		TextWriter writer = (onlyDatabase ? null : new TextWriter(exportPath));
-		DocumentFolder src = (onlyDatabase ? null : DocumentFolder.create());
+		DocumentFolder src = (onlyDatabase ? null : DocumentFolder.create(new File(args[1])));
 
 		D3Reader fac = null;
 		try {

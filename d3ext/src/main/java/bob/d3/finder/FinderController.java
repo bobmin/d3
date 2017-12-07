@@ -19,7 +19,9 @@ import bob.d3.finder.AbstractSearcher.CacheItem;
 import javafx.application.HostServices;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -40,16 +42,18 @@ public class FinderController implements Initializable {
 
 	private static Logger LOG = Logger.getLogger(FinderController.class.getName());
 
-	private File memoryPath = null;
+	private ObjectProperty<File> memoryPathProperty = new SimpleObjectProperty<>();
 
-	private File filesPath = null;
+	private ObjectProperty<File> filesPathProperty = new SimpleObjectProperty<>();
 
 	private HostServices hostServices = null;
 
 	private Stage stage = null;
 
+	/** die Ergebnisse der Suche pro Dokument-ID */
 	private Map<String, AbstractSearcher.CacheItem> cache = new HashMap<>();
 
+	/** diese Dateiablage wird ggf. nach Dokumenten durchsucht */
 	private DocumentFolder src = null;
 
 	/** Anzahl der Treffer (im Zwischenspeicher) */
@@ -90,7 +94,10 @@ public class FinderController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		laMemoryPath.textProperty().bind(memoryPathProperty.asString());
+		laMemoryPath.setTooltip(new Tooltip("memdb + memidx"));
 		laMatch.textProperty().bind(Bindings.concat(matches).concat(" Treffer"));
+		laFilesPath.textProperty().bind(filesPathProperty.asString());
 	}
 
 	@FXML
@@ -110,12 +117,12 @@ public class FinderController implements Initializable {
 
 		if (cbIndexSearcher.isSelected()) {
 			taOutput.appendText("Suche über INDEX...\n");
-			searchIn(new IndexSearcher(memoryPath), new IndexQuery(input));
+			searchIn(new IndexSearcher(memoryPathProperty.get()), new IndexQuery(input));
 		}
 
 		if (cbMemorySercher.isSelected()) {
 			taOutput.appendText("Suche über MEMORY...\n");
-			searchIn(new MemorySearcher(memoryPath), new SqlQuery(input));
+			searchIn(new MemorySearcher(memoryPathProperty.get()), new SqlQuery(input));
 		}
 
 	}
@@ -185,14 +192,19 @@ public class FinderController implements Initializable {
 	}
 
 	public void setMemoryPath(File path) {
-		this.memoryPath = path;
-		laMemoryPath.setText(memoryPath.getAbsolutePath());
-		laMemoryPath.setTooltip(new Tooltip("memdb + memidx"));
+		memoryPathProperty.set(path);
+		// laMemoryPath.setText(memoryPath.getAbsolutePath());
+		// laMemoryPath.setTooltip(new Tooltip("memdb + memidx"));
 	}
 
+	/**
+	 * Setzt den Pfad zum Wurzelverzeichnis der Dokumentenablage.
+	 * 
+	 * @param path
+	 *            der Dateipfad
+	 */
 	public void setFilesPath(File path) {
-		this.filesPath = path;
-		laFilesPath.setText(filesPath.getAbsolutePath());
+		filesPathProperty.set(path);
 	}
 
 	@FXML
@@ -238,7 +250,7 @@ public class FinderController implements Initializable {
 			try {
 				if (null == src) {
 					taOutput.appendText("Erster Zugriff ins Dateisystem. Bitte warten!\n");
-					src = DocumentFolder.create();
+					src = DocumentFolder.create(filesPathProperty.get());
 				}
 				final File f = src.lookFor(id, item.getFolder(), item.getErw());
 				if (null != f) {
@@ -294,7 +306,7 @@ public class FinderController implements Initializable {
 
 		DirectoryChooser chooser = new DirectoryChooser();
 		chooser.setTitle("Zielordner wählen");
-		chooser.setInitialDirectory(memoryPath);
+		chooser.setInitialDirectory(memoryPathProperty.get());
 		final File targetFolder = chooser.showDialog(stage);
 		if (null != targetFolder) {
 			setDisable(true);
@@ -320,7 +332,7 @@ public class FinderController implements Initializable {
 			try {
 				if (null == src) {
 					taOutput.appendText("Erster Zugriff ins Dateisystem. Bitte warten!\n");
-					src = DocumentFolder.create();
+					src = DocumentFolder.create(filesPathProperty.get());
 				}
 
 				for (String id : cache.keySet()) {

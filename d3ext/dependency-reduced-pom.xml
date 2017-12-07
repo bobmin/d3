@@ -7,7 +7,7 @@
   <version>0.0.1-SNAPSHOT</version>
   <description>Export documents from D3 database</description>
   <build>
-    <finalName>d3ext</finalName>
+    <finalName>d3tool</finalName>
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>

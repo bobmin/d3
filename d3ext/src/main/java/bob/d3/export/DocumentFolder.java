@@ -1,21 +1,19 @@
 package bob.d3.export;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Logger;
 
 import bob.d3.D3Config;
-import bob.d3.D3ExException;
 import bob.d3.D3ExException.SourceException;
 
 public class DocumentFolder {
 
 	/** der Logger */
 	private static final Logger LOG = Logger.getLogger(DocumentFolder.class.getName());
-
-	private static final String SOURCE_PATH_KEY = "D3ExSourceFolder.source_path";
 
 	private final File root;
 
@@ -29,18 +27,22 @@ public class DocumentFolder {
 		development = D3Config.getDefault().isDevelomentActiv();
 	}
 
-	public static DocumentFolder create() throws SourceException {
-		D3Config cfg = D3Config.getDefault();
-		String path = cfg.getProperty(SOURCE_PATH_KEY);
-		if (null == path) {
-			throw new D3ExException.SourceException("[path] is unknown in configuration, key = " + SOURCE_PATH_KEY,
-					null);
+	/**
+	 * Erstellt eine neue Instanz der Dokumentenablage, die durchsucht werden
+	 * kann.
+	 * 
+	 * @param root
+	 *            das Wurzelverzeichnis der Dokumentenablage
+	 * @return ein Objekt, niemals <code>null</code>
+	 * @throws FileNotFoundException
+	 *             wenn Wurzelverzeichnis nicht existiert
+	 */
+	public static DocumentFolder create(final File root) throws FileNotFoundException {
+		Objects.requireNonNull(root);
+		if (!root.exists()) {
+			throw new FileNotFoundException("[root] does not exist: " + root.getAbsolutePath());
 		}
-		File f = new File(path);
-		if (!f.exists()) {
-			throw new D3ExException.SourceException("[path] does not exist: " + path, null);
-		}
-		DocumentFolder x = new DocumentFolder(f);
+		DocumentFolder x = new DocumentFolder(root);
 		return x;
 	}
 
