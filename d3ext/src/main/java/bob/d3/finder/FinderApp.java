@@ -7,12 +7,12 @@ import java.util.List;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 /**
- * Die Anwendung zum Suchen in der Datenbank.
+ * Die Anwendung zum Suchen.
  * 
  * @author maik@btmx.net
  *
@@ -20,31 +20,32 @@ import javafx.stage.Stage;
 public class FinderApp extends Application {
 
 	@Override
-	public void start(Stage primaryStage) throws IOException {
+	public void start(Stage stage) throws IOException {
 		URL url = getClass().getResource("/FinderPane.fxml");
 		FXMLLoader loader = new FXMLLoader(url);
-		VBox pane = loader.load();
+		Parent pane = loader.load();
 
 		final Parameters params = getParameters();
 		final List<String> parameters = params.getRaw();
 		final String memoryPath = parameters.isEmpty() ? null : parameters.get(0);
 		final String filesPath = parameters.isEmpty() ? null : parameters.get(1);
+
 		FinderController ctrl = loader.getController();
+
 		ctrl.setMemoryPath(new File(memoryPath));
 		ctrl.setFilesPath(new File(filesPath));
 		ctrl.setHostService(getHostServices());
-		ctrl.setStage(primaryStage);
 
 		Scene scene = new Scene(pane);
 
-
-		primaryStage.setScene(scene);
-		primaryStage.setTitle("Document Finder");
-		primaryStage.show();
+		stage.setScene(scene);
+		stage.setTitle("Document Finder");
+		stage.show();
 
 	}
 	
 	public static void main(String[] args) {
 		launch(args);
 	}
+
 }

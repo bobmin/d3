@@ -7,8 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
-<VBox prefHeight="417.0" prefWidth="503.0" spacing="5.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bob.d3.finder.FinderController">
+<VBox fx:id="rootPane" prefHeight="417.0" prefWidth="503.0" spacing="5.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bob.d3.finder.FinderController">
    <children>
       <MenuBar fx:id="menuBar">
         <menus>
@@ -21,13 +20,13 @@
                   <MenuItem mnemonicParsing="false" onAction="#lookForFile" text="Datei öffnen" />
                   <MenuItem mnemonicParsing="false" onAction="#copyFiles" text="Dateien kopieren" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-              <MenuItem mnemonicParsing="false" text="Programm beenden" />
+              <MenuItem mnemonicParsing="false" onAction="#exitApp" text="Programm beenden" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Bearbeiten">
             <items>
-              <MenuItem mnemonicParsing="false" text="Kopieren" />
-                  <MenuItem mnemonicParsing="false" text="Einfügen" />
+              <MenuItem mnemonicParsing="false" onAction="#copyToClipboard" text="Kopieren" />
+                  <MenuItem mnemonicParsing="false" onAction="#pasteFromClipboard" text="Einfügen" />
             </items>
           </Menu>
             <Menu mnemonicParsing="false" text="Ansicht">

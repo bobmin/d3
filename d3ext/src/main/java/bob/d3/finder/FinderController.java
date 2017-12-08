@@ -28,6 +28,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
@@ -35,6 +36,9 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DataFormat;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.DirectoryChooser;
@@ -50,8 +54,6 @@ public class FinderController implements Initializable {
 
 	private HostServices hostServices = null;
 
-	private Stage stage = null;
-
 	/** die Ergebnisse der Suche pro Dokument-ID */
 	private Map<String, AbstractSearcher.CacheItem> cache = new HashMap<>();
 
@@ -60,6 +62,9 @@ public class FinderController implements Initializable {
 
 	/** Anzahl der Treffer (im Zwischenspeicher) */
 	private IntegerProperty matches = new SimpleIntegerProperty(0);
+
+	@FXML
+	private Parent rootPane;
 
 	@FXML
 	private MenuBar menuBar;
@@ -314,18 +319,18 @@ public class FinderController implements Initializable {
 
 	@FXML
 	void copyFiles(ActionEvent event) {
-		if (0 == cache.size()) {
+		if (0 < cache.size()) {
+			DirectoryChooser chooser = new DirectoryChooser();
+			chooser.setTitle("Zielordner wählen");
+			chooser.setInitialDirectory(memoryPathProperty.get());
+			Stage stage = (Stage) rootPane.getScene().getWindow();
+			final File targetFolder = chooser.showDialog(stage);
+			if (null != targetFolder) {
+				setDisable(true);
+				new Thread(new FileCopier(targetFolder)).start();
+			}
+		} else {
 			publishLine("Keine Treffer zum Kopieren. Suche erfolgreich beendet?");
-			return;
-		}
-
-		DirectoryChooser chooser = new DirectoryChooser();
-		chooser.setTitle("Zielordner wählen");
-		chooser.setInitialDirectory(memoryPathProperty.get());
-		final File targetFolder = chooser.showDialog(stage);
-		if (null != targetFolder) {
-			setDisable(true);
-			new Thread(new FileCopier(targetFolder)).start();
 		}
 	}
 
@@ -369,7 +374,7 @@ public class FinderController implements Initializable {
 							util.copy(f, dst);
 							publishLine("Datei " + f.getAbsolutePath() + " kopiert.");
 						} else {
-							publishLine("Datei " + dst.getName() + " nicht kopiert. Existiert schon?.");
+							publishLine("Datei " + dst.getName() + " nicht kopiert. Existiert schon?");
 						}
 					} else {
 						publishLine("Keine Datei mit ID gefunden.");
@@ -386,8 +391,35 @@ public class FinderController implements Initializable {
 
 	}
 
-	public void setStage(Stage stage) {
-		this.stage = stage;
+	@FXML
+	void exitApp(ActionEvent event) {
+		Stage stage = (Stage) rootPane.getScene().getWindow();
+		stage.close();
+	}
+
+	@FXML
+	void copyToClipboard(ActionEvent event) {
+		String text = tfInput.getSelectedText();
+		if (0 == text.trim().length()) {
+			text = taOutput.getSelectedText();
+		}
+		if (0 < text.trim().length()) {
+			Clipboard clipboard = Clipboard.getSystemClipboard();
+			ClipboardContent content = new ClipboardContent();
+			content.putString(text);
+			clipboard.setContent(content);
+		}
+	}
+
+	@FXML
+	void pasteFromClipboard(ActionEvent event) {
+		Clipboard clipboard = Clipboard.getSystemClipboard();
+		if (!clipboard.hasContent(DataFormat.PLAIN_TEXT)) {
+			return;
+		}
+		String newText = tfInput.getText() + clipboard.getString();
+		tfInput.setText(newText);
+		tfInput.positionCaret(newText.length());
 	}
 
 }
