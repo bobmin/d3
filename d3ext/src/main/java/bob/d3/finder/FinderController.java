@@ -23,7 +23,9 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -114,34 +116,47 @@ public class FinderController implements Initializable {
 		}
 
 		String input = tfInput.getText();
+		File root = memoryPathProperty.get();
 
-		if (cbIndexSearcher.isSelected()) {
-			taOutput.appendText("Suche über INDEX...\n");
-			searchIn(new IndexSearcher(memoryPathProperty.get()), new IndexQuery(input));
+		String indexCmd = analyzeCommand(cbIndexSearcher.isSelected(), "INDEX", new IndexQuery(input));
+		String memoryCmd = analyzeCommand(cbMemorySercher.isSelected(), "MEMORY", new SqlQuery(input));
+
+		if (null != indexCmd || null != memoryCmd) {
+			SearchWorker task = new SearchWorker(root, indexCmd, memoryCmd);
+
+			task.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED, new EventHandler<WorkerStateEvent>() {
+				@Override
+				public void handle(WorkerStateEvent t) {
+					final List<CacheItem> result = task.getValue();
+					if (0 < result.size()) {
+						cache.clear();
+						for (CacheItem item : result) {
+							publishItem(item.getId(), item);
+						}
+						matches.set(cache.size());
+					}
+					setDisable(false);
+				}
+			});
+
+			setDisable(true);
+			new Thread(task).start();
+
 		}
-
-		if (cbMemorySercher.isSelected()) {
-			taOutput.appendText("Suche über MEMORY...\n");
-			searchIn(new MemorySearcher(memoryPathProperty.get()), new SqlQuery(input));
-		}
-
 	}
 
-	private void searchIn(final AbstractSearcher searcher, final AbstractQuery query) {
-		cache.clear();
-		// Abfrage aufbauen
-		final String cmd = query.getCommand();
-		if (null == cmd) {
-			publishLine("Abfrage unklar. Schreibweise korrekt?");
-		} else {
-			publishQuery(cmd);
-			// Suche ausführen
-			List<CacheItem> result = searcher.lookFor(cmd);
-			for (CacheItem x : result) {
-				publishItem(x.getId(), x);
+	private String analyzeCommand(boolean onoff, String name, AbstractQuery query) {
+		String x = null;
+		if (onoff) {
+			publishLine("Suche über " + name + "...");
+			x = query.getCommand();
+			if (null != x) {
+				publishQuery(x);
+			} else {
+				publishLine("Abfrage unklar. Schreibweise korrekt?");
 			}
 		}
-		matches.set(cache.size());
+		return x;
 	}
 
 	/**

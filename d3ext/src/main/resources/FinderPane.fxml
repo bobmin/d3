@@ -7,100 +7,98 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="382.0" prefWidth="498.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bob.d3.finder.FinderController">
+
+<VBox prefHeight="417.0" prefWidth="503.0" spacing="5.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bob.d3.finder.FinderController">
    <children>
-      <VBox layoutX="5.0" layoutY="5.0" prefHeight="417.0" prefWidth="503.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <children>
-            <MenuBar fx:id="menuBar">
-              <menus>
-                <Menu mnemonicParsing="false" text="Suchen">
-                  <items>
-                        <CheckMenuItem fx:id="cbIndexSearcher" mnemonicParsing="false" selected="true" text="Index durchsuchen" />
-                        <CheckMenuItem fx:id="cbMemorySercher" mnemonicParsing="false" text="Datenbank durchsuchen" />
-                        <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" onAction="#startDirectSearch" text="Direktsuche starten" />
-                        <MenuItem mnemonicParsing="false" onAction="#lookForFile" text="Datei öffnen" />
-                        <MenuItem mnemonicParsing="false" onAction="#copyFiles" text="Dateien kopieren" />
-                        <SeparatorMenuItem mnemonicParsing="false" />
-                    <MenuItem mnemonicParsing="false" text="Programm beenden" />
-                  </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Bearbeiten">
-                  <items>
-                    <MenuItem mnemonicParsing="false" text="Kopieren" />
-                        <MenuItem mnemonicParsing="false" text="Einfügen" />
-                  </items>
-                </Menu>
-                  <Menu mnemonicParsing="false" text="Ansicht">
-                    <items>
-                        <CheckMenuItem fx:id="cbShowQuery" mnemonicParsing="false" text="Abfragen anzeigen" />
-                        <MenuItem mnemonicParsing="false" onAction="#printCacheItems" text="Zwischenspeicher ausgeben" />
-                        <CheckMenuItem fx:id="cbClearBefore" mnemonicParsing="false" selected="true" text="Ausgabe vor Suche löschen" />
-                        <MenuItem mnemonicParsing="false" onAction="#clearOutput" text="Ausgabe jetzt löschen" />
-                    </items>
-                  </Menu>
-                <Menu mnemonicParsing="false" text="Hilfe">
-                  <items>
-                    <MenuItem mnemonicParsing="false" onAction="#showWebsite" text="Webseite öffnen" />
-                  </items>
-                </Menu>
-              </menus>
-            </MenuBar>
-            <BorderPane prefHeight="4000.0" prefWidth="4000.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
-               <top>
-                  <BorderPane BorderPane.alignment="CENTER">
-                     <center>
-                        <TextField fx:id="tfInput" onKeyPressed="#keyPressed" BorderPane.alignment="CENTER" />
-                     </center>
-                     <right>
-                        <Button fx:id="btnSearch" mnemonicParsing="false" onAction="#startSearch" text="Suche starten" BorderPane.alignment="CENTER">
-                           <BorderPane.margin>
-                              <Insets left="5.0" />
-                           </BorderPane.margin>
-                        </Button>
-                     </right>
-                     <BorderPane.margin>
-                        <Insets bottom="5.0" />
-                     </BorderPane.margin>
-                  </BorderPane>
-               </top>
+      <MenuBar fx:id="menuBar">
+        <menus>
+          <Menu mnemonicParsing="false" text="Suchen">
+            <items>
+                  <CheckMenuItem fx:id="cbIndexSearcher" mnemonicParsing="false" selected="true" text="Index durchsuchen" />
+                  <CheckMenuItem fx:id="cbMemorySercher" mnemonicParsing="false" text="Datenbank durchsuchen" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" onAction="#startDirectSearch" text="Direktsuche starten" />
+                  <MenuItem mnemonicParsing="false" onAction="#lookForFile" text="Datei öffnen" />
+                  <MenuItem mnemonicParsing="false" onAction="#copyFiles" text="Dateien kopieren" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+              <MenuItem mnemonicParsing="false" text="Programm beenden" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Bearbeiten">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Kopieren" />
+                  <MenuItem mnemonicParsing="false" text="Einfügen" />
+            </items>
+          </Menu>
+            <Menu mnemonicParsing="false" text="Ansicht">
+              <items>
+                  <CheckMenuItem fx:id="cbShowQuery" mnemonicParsing="false" text="Abfragen anzeigen" />
+                  <MenuItem mnemonicParsing="false" onAction="#printCacheItems" text="Zwischenspeicher ausgeben" />
+                  <CheckMenuItem fx:id="cbClearBefore" mnemonicParsing="false" selected="true" text="Ausgabe vor Suche löschen" />
+                  <MenuItem mnemonicParsing="false" onAction="#clearOutput" text="Ausgabe jetzt löschen" />
+              </items>
+            </Menu>
+          <Menu mnemonicParsing="false" text="Hilfe">
+            <items>
+              <MenuItem mnemonicParsing="false" onAction="#showWebsite" text="Webseite öffnen" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+      <BorderPane prefHeight="4000.0" prefWidth="4000.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+         <top>
+            <BorderPane BorderPane.alignment="CENTER">
                <center>
-                  <ScrollPane fitToHeight="true" fitToWidth="true" BorderPane.alignment="CENTER">
-                    <content>
-                        <TextArea fx:id="taOutput" editable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                    </content>
-                  </ScrollPane>
+                  <TextField fx:id="tfInput" onKeyPressed="#keyPressed" BorderPane.alignment="CENTER" />
                </center>
-               <bottom>
-                  <HBox>
-                     <children>
-                        <Label fx:id="laMemoryPath" text="memory path" BorderPane.alignment="TOP_LEFT">
-                           <BorderPane.margin>
-                              <Insets top="2.0" />
-                           </BorderPane.margin>
-                           <HBox.margin>
-                              <Insets top="3.0" />
-                           </HBox.margin>
-                        </Label>
-                        <Region HBox.hgrow="ALWAYS" />
-                        <Label fx:id="laMatch" text="0 Treffer">
-                           <HBox.margin>
-                              <Insets top="3.0" />
-                           </HBox.margin>
-                        </Label>
-                        <Region HBox.hgrow="ALWAYS" />
-                        <Label fx:id="laFilesPath" text="files path">
-                           <HBox.margin>
-                              <Insets top="3.0" />
-                           </HBox.margin></Label>
-                     </children>
-                  </HBox>
-               </bottom>
-               <VBox.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </VBox.margin>
+               <right>
+                  <Button fx:id="btnSearch" mnemonicParsing="false" onAction="#startSearch" text="Suche starten" BorderPane.alignment="CENTER">
+                     <BorderPane.margin>
+                        <Insets left="5.0" />
+                     </BorderPane.margin>
+                  </Button>
+               </right>
+               <BorderPane.margin>
+                  <Insets bottom="5.0" />
+               </BorderPane.margin>
             </BorderPane>
-         </children>
-      </VBox>
+         </top>
+         <center>
+            <ScrollPane fitToHeight="true" fitToWidth="true" BorderPane.alignment="CENTER">
+              <content>
+                  <TextArea fx:id="taOutput" editable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+              </content>
+            </ScrollPane>
+         </center>
+         <bottom>
+            <HBox>
+               <children>
+                  <Label fx:id="laMemoryPath" text="memory path" BorderPane.alignment="TOP_LEFT">
+                     <BorderPane.margin>
+                        <Insets top="2.0" />
+                     </BorderPane.margin>
+                     <HBox.margin>
+                        <Insets top="3.0" />
+                     </HBox.margin>
+                  </Label>
+                  <Region HBox.hgrow="ALWAYS" />
+                  <Label fx:id="laMatch" text="0 Treffer">
+                     <HBox.margin>
+                        <Insets top="3.0" />
+                     </HBox.margin>
+                  </Label>
+                  <Region HBox.hgrow="ALWAYS" />
+                  <Label fx:id="laFilesPath" text="files path">
+                     <HBox.margin>
+                        <Insets top="3.0" />
+                     </HBox.margin>
+                  </Label>
+               </children>
+            </HBox>
+         </bottom>
+         <VBox.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </VBox.margin>
+      </BorderPane>
    </children>
-</AnchorPane>
+</VBox>

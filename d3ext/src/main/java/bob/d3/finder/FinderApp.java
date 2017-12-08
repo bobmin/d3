@@ -8,7 +8,7 @@ import java.util.List;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 /**
@@ -23,7 +23,7 @@ public class FinderApp extends Application {
 	public void start(Stage primaryStage) throws IOException {
 		URL url = getClass().getResource("/FinderPane.fxml");
 		FXMLLoader loader = new FXMLLoader(url);
-		AnchorPane pane = loader.load();
+		VBox pane = loader.load();
 
 		final Parameters params = getParameters();
 		final List<String> parameters = params.getRaw();
