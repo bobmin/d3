@@ -16,6 +16,7 @@ import bob.d3.CopyUtil;
 import bob.d3.D3ExException.SourceException;
 import bob.d3.export.DocumentFolder;
 import bob.d3.finder.AbstractSearcher.CacheItem;
+import javafx.application.Application;
 import javafx.application.HostServices;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.IntegerProperty;
@@ -31,8 +32,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckMenuItem;
+import javafx.scene.control.IndexRange;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
+import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
@@ -413,13 +416,52 @@ public class FinderController implements Initializable {
 
 	@FXML
 	void pasteFromClipboard(ActionEvent event) {
+		if (!tfInput.isFocused()) {
+			return;
+		}
+
 		Clipboard clipboard = Clipboard.getSystemClipboard();
+
 		if (!clipboard.hasContent(DataFormat.PLAIN_TEXT)) {
 			return;
 		}
-		String newText = tfInput.getText() + clipboard.getString();
-		tfInput.setText(newText);
-		tfInput.positionCaret(newText.length());
+
+		IndexRange range = tfInput.getSelection();
+
+		String origText = tfInput.getText();
+
+		int endPos = 0;
+		String updatedText = "";
+		String firstPart = origText.substring(0, range.getStart());
+		String lastPart = origText.substring(range.getEnd());
+
+		String clipboardText = clipboard.getString();
+
+		updatedText = firstPart + clipboardText + lastPart;
+
+		if (range.getStart() == range.getEnd()) {
+			endPos = range.getEnd() + clipboardText.length();
+		} else {
+			endPos = range.getStart() + clipboardText.length();
+		}
+
+		tfInput.setText(updatedText);
+		tfInput.positionCaret(endPos);
+
+	}
+
+	@FXML
+	void changeTheme(ActionEvent event) {
+		String name = ((RadioMenuItem) event.getSource()).getText();
+		String url;
+		if ("Caspian".equals(name)) {
+			url = Application.STYLESHEET_CASPIAN;
+		} else if ("Modena".equals(name)) {
+			url = Application.STYLESHEET_MODENA;
+		} else {
+			throw new IllegalArgumentException("[name] unknown: " + name);
+		}
+		Application.setUserAgentStylesheet(url);
 	}
 
 }

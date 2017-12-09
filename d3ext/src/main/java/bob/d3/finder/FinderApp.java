@@ -37,6 +37,7 @@ public class FinderApp extends Application {
 		ctrl.setHostService(getHostServices());
 
 		Scene scene = new Scene(pane);
+		scene.getStylesheets().add("/FinderPane.css");
 
 		stage.setScene(scene);
 		stage.setTitle("Document Finder");

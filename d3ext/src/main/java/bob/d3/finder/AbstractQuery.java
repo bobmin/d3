@@ -15,24 +15,40 @@ import java.util.regex.Pattern;
  */
 public abstract class AbstractQuery {
 
+	/** <code>true</code> wenn Eingabe leer war */
 	protected boolean empty = false;
 
+	/** gefüllt wenn Direktsuche über #direkt angezeigt wurde */
 	protected String direct = null;
 
+	/** die ID's sollen gesucht werden */
 	protected List<String> idValues = null;
 
+	/** die Dateierweiterungen sollen gesucht werden */
 	protected List<String> extValues = null;
 
+	/** die Kundennummern sollen gesucht werden */
 	protected List<String> knrValues = null;
 
+	/** die Lieferantennummern sollen gesucht werden */
 	protected List<String> lnrValues = null;
 
+	/** die Dokumentenarten sollen gesucht werden */
 	protected List<String> artValues = null;
 
+	/** ab diesem Datum soll gesucht werden */
 	protected int[] dateStarts = null;
 
+	/** bis zu diesem Datum soll gesucht werden */
 	protected int[] dateEnds = null;
 
+	/**
+	 * Instanziiert eine Abfrage für die Eingabe und versucht die verschiedenen
+	 * Muster innerhalb der Eingabe zu finden.
+	 * 
+	 * @param input
+	 *            die Benutzereingabe
+	 */
 	public AbstractQuery(final String input) {
 		if (null == input || 0 == input.trim().length()) {
 			empty = true;
@@ -66,6 +82,17 @@ public abstract class AbstractQuery {
 		}
 	}
 
+	/**
+	 * Sucht das Muster innerhalb der Eingabe und liefert alle Werte aus allen
+	 * Fundstellen zurück. Der Wert wird im Muster als erstes Klammernpaar
+	 * erwartet.
+	 * 
+	 * @param input
+	 *            die Eingabe
+	 * @param token
+	 *            das Muster
+	 * @return ein Objekt, niemals <code>null</code>
+	 */
 	private List<String> lookForList(String input, String token) {
 		List<String> x = new LinkedList<>();
 		Pattern p = Pattern.compile(token);
@@ -77,6 +104,16 @@ public abstract class AbstractQuery {
 		return x;
 	}
 
+	/**
+	 * Sucht das Muster innerhalb der Eingabe und liefert die Werte zurück. Als
+	 * Werte werden die ersten 3 Klammernpaare interpretiert.
+	 * 
+	 * @param input
+	 *            die Eingabe
+	 * @param token
+	 *            das Muster
+	 * @return ein Objekt, niemals <code>null</code>
+	 */
 	private int[] lookForArray(String input, String token) {
 		int[] x = null;
 		Pattern p = Pattern.compile(token);

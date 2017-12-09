@@ -31,6 +31,16 @@
           </Menu>
             <Menu mnemonicParsing="false" text="Ansicht">
               <items>
+                  <Menu mnemonicParsing="false" text="Erscheinungsbild ändern">
+                    <items>
+                        <RadioMenuItem mnemonicParsing="false" onAction="#changeTheme" selected="true" text="Modena">
+                           <toggleGroup>
+                              <ToggleGroup fx:id="styles" />
+                           </toggleGroup>
+                        </RadioMenuItem>
+                        <RadioMenuItem mnemonicParsing="false" onAction="#changeTheme" text="Caspian" toggleGroup="$styles" />
+                    </items>
+                  </Menu>
                   <CheckMenuItem fx:id="cbShowQuery" mnemonicParsing="false" text="Abfragen anzeigen" />
                   <MenuItem mnemonicParsing="false" onAction="#printCacheItems" text="Zwischenspeicher ausgeben" />
                   <CheckMenuItem fx:id="cbClearBefore" mnemonicParsing="false" selected="true" text="Ausgabe vor Suche löschen" />
