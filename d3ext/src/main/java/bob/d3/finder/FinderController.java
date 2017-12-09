@@ -64,7 +64,7 @@ public class FinderController implements Initializable {
 	private DocumentFolder src = null;
 
 	/** Anzahl der Treffer (im Zwischenspeicher) */
-	private IntegerProperty matches = new SimpleIntegerProperty(0);
+	private IntegerProperty countProperty = new SimpleIntegerProperty(0);
 
 	@FXML
 	private Parent rootPane;
@@ -106,7 +106,7 @@ public class FinderController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		laMemoryPath.textProperty().bind(memoryPathProperty.asString());
 		laMemoryPath.setTooltip(new Tooltip("memdb + memidx"));
-		laMatch.textProperty().bind(Bindings.concat(matches).concat(" Treffer"));
+		laMatch.textProperty().bind(Bindings.concat(countProperty).concat(" Treffer"));
 		laFilesPath.textProperty().bind(filesPathProperty.asString());
 	}
 
@@ -123,6 +123,8 @@ public class FinderController implements Initializable {
 			taOutput.clear();
 		}
 
+		cache.clear();
+
 		String input = tfInput.getText();
 		File root = memoryPathProperty.get();
 
@@ -137,12 +139,11 @@ public class FinderController implements Initializable {
 				public void handle(WorkerStateEvent t) {
 					final List<CacheItem> result = task.getValue();
 					if (0 < result.size()) {
-						cache.clear();
 						for (CacheItem item : result) {
 							publishItem(item.getId(), item);
 						}
-						matches.set(cache.size());
 					}
+					countProperty.set(cache.size());
 					setDisable(false);
 				}
 			});
