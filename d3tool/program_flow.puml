@@ -1,0 +1,32 @@
+@startuml
+left to right direction
+
+database D3
+
+cloud "export database" {
+[ExportTool] as ext
+database "local H2\ndatabase" as memdb
+}
+
+D3 -> ext
+ext -> memdb
+ 
+cloud "create index" {
+node "Lucene Index" as memidx
+[MemoryIndexer] as indexer
+}
+
+memdb --> indexer
+memidx <- indexer
+
+cloud "search documents" {
+[FinderApp] as find
+actor user
+[documents in the\nfile system] as fs
+}
+
+memidx --> find
+find -> user
+find <-- fs
+
+@enduml
