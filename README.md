@@ -34,6 +34,8 @@ Database from `C:\Temp\d3ext\171201\memdb\` will readed and the Index will wrote
 
 ## FinderApp
 
+The [short video](https://youtu.be/-cLsyQ4DuNQ) shows an example query.
+
 ```
 java -cp d3ext.jar bob.d3.finder.FinderApp "C:\Temp\d3ext\171201"
 ```
