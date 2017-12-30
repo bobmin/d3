@@ -1,5 +1,7 @@
 # d3
 
+![program flow](https://github.com/bobmin/d3/blob/master/d3tool/program_flow.png)
+
 ```
 -Djava.util.logging.config.file=C:\d3\d3ext\logging.properties
 ```
